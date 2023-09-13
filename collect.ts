@@ -106,11 +106,12 @@ let storeByDate = db.transaction((options: { date: Date; html: string }) => {
   // log('looped times ' + (trList.length - 1))
 })
 
-function getTime(node: HTMLElement): string {
-  if (node.childNodes && node.childNodes.length > 0) {
-    return (node.childNodes[0] as HTMLElement).innerHTML
+function getTime(td: HTMLElement): string {
+  let child = td.childNodes![0]
+  if (child instanceof HTMLElement) {
+    return child.innerHTML
   }
-  return node.innerHTML
+  return child.outerHTML
 }
 
 function parseAmount(text: string): null | number {
