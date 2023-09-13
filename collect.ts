@@ -1,16 +1,18 @@
 import {
   parseHtmlDocument,
-  walkNode,
   HTMLElement,
   getElementsByTagName,
-  getElementByTagName,
 } from '@beenotung/html-parser'
-import { readFileSync, writeFileSync } from 'fs'
 import { Date, proxy } from './proxy'
 import { find } from 'better-sqlite3-proxy'
-import { format_2_digit } from '@beenotung/tslib/format'
-import { TimezoneDate } from 'timezone-date.ts'
+import { DAY } from '@beenotung/tslib/time'
 import { db } from './db'
+import { parseDate, parseTime, toDateStr } from './format'
+import { format_time_duration } from '@beenotung/tslib/format'
+import debug from 'debug'
+
+// let log = debug('collect.ts')
+// log.enabled = true
 
 async function collectByRange(options: {
   first_date: string
@@ -18,37 +20,56 @@ async function collectByRange(options: {
 }) {
   let dateStr = options.last_date
 
-  let date = new TimezoneDate()
-  date.timezone = 0
-  let parts = dateStr.split('-')
-  let year = +parts[0]
-  let month = +parts[1]
-  let day = +parts[2]
+  let date = parseDate(dateStr)
 
-  date.setFullYear(year, month - 1, day)
-  date.setHours(0, 0, 0, 0)
+  let totalDayCount =
+    (parseDate(options.last_date).getTime() -
+      parseDate(options.first_date).getTime()) /
+      DAY +
+    1
+  let collectedDayCount = 0
+  let startTime = Date.now()
+  for (let i = 0; i < totalDayCount; i++) {
+    let year = date.getFullYear()
+    let month = date.getMonth() + 1
+    let day = date.getDate()
 
-  for (;;) {
-    year = date.getFullYear()
-    month = date.getMonth() + 1
-    day = date.getDate()
-
-    // TODO next day
-
-    if (find(proxy.date, { year, month, day })) continue
-
-    let dateStr = year + '-' + format_2_digit(month) + '-' + format_2_digit(day)
-    let html = await downloadByDate(dateStr)
-    storeByDate({
-      date: {
-        year,
-        month,
-        day,
-        week_day: date.getDay(),
-      },
-      html,
-    })
+    if (!find(proxy.date, { year, month, day })) {
+      dateStr = toDateStr(year, month, day)
+      // log('found new ' + dateStr)
+      let html = await downloadByDate(dateStr)
+      // log('downloaded ' + dateStr)
+      storeByDate({
+        date: {
+          year,
+          month,
+          day,
+          week_day: date.getDay(),
+        },
+        html,
+      })
+      // log('stored ' + dateStr)
+      collectedDayCount++
+      let passedTime = Date.now() - startTime
+      let remainDayCount = totalDayCount - i - 1
+      let timePerDay = passedTime / collectedDayCount
+      let remainTime = remainDayCount * timePerDay
+      let remainTimeStr = format_time_duration(remainTime, 1)
+      if (!remainTimeStr.includes('.')) {
+        remainTimeStr = remainTimeStr.replace(' ', '.0 ')
+      }
+      // console.log()
+      process.stdout.write(
+        `\r  [progress]` +
+          ` | collected: ${i + 1}/${totalDayCount} days` +
+          ` | ETA: ${remainTimeStr}` +
+          // ` | time per day: ${timePerDay.toFixed(1)} ms` +
+          ` | ${options.first_date} < ${dateStr} > ${options.last_date}`,
+      )
+    }
+    date.setTime(date.getTime() - DAY)
   }
+  console.log()
 }
 
 async function downloadByDate(dateStr: string) {
@@ -60,7 +81,9 @@ async function downloadByDate(dateStr: string) {
 
 let storeByDate = db.transaction((options: { date: Date; html: string }) => {
   let date_id = proxy.date.push(options.date)
+  // log('pushed date ' + date_id)
   let doc = parseHtmlDocument(options.html)
+  // log('parsed html ' + options.html.length)
   let trList = getElementsByTagName(doc, 'tr')
 
   let headTr = trList[0]
@@ -68,20 +91,32 @@ let storeByDate = db.transaction((options: { date: Date; html: string }) => {
 
   for (let i = 1; i < trList.length; i++) {
     let dataTr = trList[i]
-    let time = getElementByTagName(dataTr.childNodes![0], 'a')!.innerHTML
+    dataTr.childNodes![0]
+    let time = getTime(dataTr.childNodes![0] as HTMLElement)
     let time_id = getTimeId(time)
     for (let i = 1; i < headings.length; i++) {
-      let amount = toAmount((dataTr.childNodes![i] as HTMLElement).innerHTML)
+      let amount = parseAmount((dataTr.childNodes![i] as HTMLElement).innerHTML)
+      if (amount == null) continue
       let district_name = headings[i]
       let district_id = getDistrictId(district_name)
       find(proxy.rainfall, { date_id, time_id, district_id }) ||
         proxy.rainfall.push({ date_id, time_id, district_id, amount })
     }
   }
+  // log('looped times ' + (trList.length - 1))
 })
 
-function toAmount(text: string): number {
+function getTime(node: HTMLElement): string {
+  if (node.childNodes && node.childNodes.length > 0) {
+    return (node.childNodes[0] as HTMLElement).innerHTML
+  }
+  return node.innerHTML
+}
+
+function parseAmount(text: string): null | number {
+  if (text == 'M') return null
   if (text == '-') return 0
+  if (text == '') return 0
   let number = +text
   if (number) return number
   throw new Error('invalid amount: ' + JSON.stringify(text))
@@ -104,9 +139,7 @@ function getTimeId(text: string): number {
   let id = time_id_cache[text]
   if (id) return id
 
-  let parts = text.split(':')
-  let hour = +parts[0]
-  let minute = +parts[1]
+  let { hour, minute } = parseTime(text)
 
   id =
     find(proxy.time, { hour, minute })?.id || proxy.time.push({ hour, minute })
@@ -115,9 +148,14 @@ function getTimeId(text: string): number {
 }
 
 async function main() {
-  await collectByRange({
-    first_date: '2023-07-01',
-    last_date: '2023-07-05',
-  })
+  let date = new Date(Date.now() - 7 * DAY)
+  let last_date = toDateStr(
+    date.getFullYear(),
+    date.getMonth() + 1,
+    date.getDate(),
+  )
+  last_date = '2023-07-31'
+  let first_date = '2002-04-06'
+  await collectByRange({ first_date, last_date })
 }
 main().catch(e => console.error(e))
