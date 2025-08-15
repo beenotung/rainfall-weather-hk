@@ -9,3 +9,4 @@ dist/
 *.tgz
 db.sqlite3*
 sample.html
+bundle.js

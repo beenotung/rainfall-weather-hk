@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "run-p serve watch",
+    "serve": "ts-node-dev server.ts",
+    "watch": "esbuild app.ts --bundle --watch --outfile=public/bundle.js",
     "db": "run-s db:update db:plan db:update",
     "db:plan": "auto-migrate db.sqlite3 < erd.txt",
     "db:update": "knex migrate:latest && erd-to-proxy < erd.txt > proxy.ts",
@@ -15,8 +18,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/debug": "^4.1.8",
+    "@types/express": "^5.0.3",
     "@types/integer": "^4.0.1",
     "@types/node": "^20.5.9",
+    "esbuild": "^0.25.9",
     "npm-run-all": "^4.1.5",
     "quick-erd": "^4.10.0",
     "ts-node": "^10.9.1",
@@ -29,7 +34,15 @@
     "better-sqlite3-proxy": "^2.4.1",
     "better-sqlite3-schema": "^3.1.2",
     "debug": "^4.3.4",
+    "express": "^5.1.0",
     "knex": "^2.4.2",
+    "listening-on": "^2.0.9",
     "timezone-date.ts": "^2.0.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild"
+    ]
   }
 }
