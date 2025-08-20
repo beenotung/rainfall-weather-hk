@@ -1,12 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rainfall Weather HK</title>
-  </head>
+  <title>Rainfall Weather HK</title>
   <body>
     <h1>Rainfall Weather HK</h1>
-    <script src="bundle.js"></script>
+    <div id = 'user_input' class = 'user_input'>
+      <form id = 'user_input_form'>
+        <div id = "district_group" class = "district_group">
+          <label for="district_input">District:</label>
+          <select id = "district_input" name = "district_input" type="hidden">
+            <option value= "All" selected>所有</option> 
+            <option value= "中西區">中西區</option>
+            <option value= "東區">東區</option>
+            <option value= "離島區">離島區</option>
+            <option value= "九龍城">九龍城</option>
+            <option value= "觀塘">觀塘</option>
+            <option value= "葵青">葵青</option>
+            <option value= "北區">北區</option>
+            <option value= "西貢">西貢</option>
+            <option value= "沙田">沙田</option>
+            <option value= "深水埗">深水埗</option>
+            <option value= "南區">南區</option>
+            <option value= "大埔">大埔</option>
+            <option value= "荃灣">荃灣</option>
+            <option value= "屯門">屯門</option>
+            <option value= "灣仔">灣仔</option>
+            <option value= "黃大仙">黃大仙</option>
+            <option value= "油尖旺">油尖旺</option>
+            <option value= "元朗">元朗</option>
+            <option value= "大嶼山">大嶼山</option>
+            <option value= "南丫島">南丫島</option>
+            <option value= "九龍西">九龍西</option>
+            <option value= "九龍東">九龍東</option>
+          </select>
+        </div>
+        <div id ="start_date_group" class = "start_date_group">
+          <label for="start_date_input">Start (MM-DD):</label>
+          <input
+            type="date"
+            id="start_date_input"
+            name="start_date_input"
+            min="2002-01-01"
+            max="2023-12-31"
+            value="2002-01-01"
+          >
+        </div>
+        <div id = "end_date_group" class = "end_date_group">
+          <label for="end_date_input">End (MM-DD):</label>
+          <input
+            type="date"
+            id="end_date_input"
+            name="end_date_input"
+            min="2002-01-01"
+            max="2023-12-31"
+            value="2023-12-31"
+          >
+        </div>
+        <div id = "start_time_input_group" class = "start_time_input_group">
+          <label for = "start_hour_input">Start Hour: </label>
+          <select id = "start_hour_input" name = "start_hour_input">
+            <option value= "00" selected>00</option>
+            <option value= "01">01</option>
+            <option value= "02">02</option>
+            <option value= "03">03</option>
+            <option value= "04">04</option>
+            <option value= "05">05</option>
+            <option value= "06">06</option>
+            <option value= "07">07</option>
+            <option value= "08">08</option>
+            <option value= "09">09</option>
+            <option value= "10">10</option>
+            <option value= "11">11</option>
+            <option value= "12">12</option>
+            <option value= "13">13</option>
+            <option value= "14">14</option>
+            <option value= "15">15</option>
+            <option value= "16">16</option>
+            <option value= "17">17</option>
+            <option value= "18">18</option>
+            <option value= "19">19</option>
+            <option value= "20">20</option>
+            <option value= "21">21</option>
+            <option value= "22">22</option>
+            <option value= "23">23</option>
+          </select>
+          <label for = "start_minute_input">Start Minute: </label>
+          <select id = "start_minute_input" name = "start_minute_input">
+            <option value= "00" selected>00</option>
+            <option value= "15">15</option>
+            <option value= "30">30</option>
+            <option value= "45">45</option>
+          </select>
+        </div>
+
+        <div id = "end_time_input_group" class = "end_time_input_group">
+          <label for = "end_hour_input">End Hour: </label>
+          <select id = "end_hour_input" name = "end_hour_input">
+            <option value= "00">00</option>
+            <option value= "01">01</option>
+            <option value= "02">02</option>
+            <option value= "03">03</option>
+            <option value= "04">04</option>
+            <option value= "05">05</option>
+            <option value= "06">06</option>
+            <option value= "07">07</option>
+            <option value= "08">08</option>
+            <option value= "09">09</option>
+            <option value= "10">10</option>
+            <option value= "11">11</option>
+            <option value= "12">12</option>
+            <option value= "13">13</option>
+            <option value= "14">14</option>
+            <option value= "15">15</option>
+            <option value= "16">16</option>
+            <option value= "17">17</option>
+            <option value= "18">18</option>
+            <option value= "19">19</option>
+            <option value= "20">20</option>
+            <option value= "21">21</option>
+            <option value= "22">22</option>
+            <option value= "23" selected>23</option>
+          </select>
+          <label for = "end_minute_input">End Minute: </label>
+          <select id = "end_minute_input" name = "end_minute_input">
+            <option value= "00">00</option>
+            <option value= "15">15</option>
+            <option value= "30">30</option>
+            <option value= "45" selected>45</option>
+          </select>
+        </div>
+        <div id = "gregorian_chinese_option_group">
+          <label for = "gregorian_chinese_option">Gregorian Date/Chinese Date: </label>
+
+          <input type="radio" id="gregorian_date" name="gregorian_chinese_option" value="gregorian_date" checked/>
+          <label for="gregorian_date">Gregorian Date</label>
+
+          <input type="radio" id="chinese_date" name="gregorian_chinese_option" value="chinese_date" />
+          <label for="chinese_date">Chinese Date</label>
+        </div>
+
+        <button id = "submit_button" type = "submit">Submit</button>
+        <button id = "reset_button" type = "reset">Reset</button>
+      </form>
+    </div>
+    <div id='calendar'>
+      <script src='./bundle.js'></script>
+    </div>
   </body>
 </html>
