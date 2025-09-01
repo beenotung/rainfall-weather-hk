@@ -124,6 +124,7 @@ export async function rainfall_sum(options:{
   end_hour: number, 
   end_minute : number,
 }){
+    console.log(options)
   let {district, start_year, end_year, start_month, start_day, end_month, end_day, start_hour, start_minute, end_hour, end_minute} = options
   let district_id = district_handler(district) as number
   let query_result = rainfall_data_querier.all({
@@ -139,6 +140,7 @@ export async function rainfall_sum(options:{
     end_hour,
     end_minute
   })
+
   
   for(let i = 0; i < query_result.length; i++){
     let average = query_result[i]['total_amount'] / query_result[i]['data_count']

@@ -37,12 +37,14 @@ app.post('/submit', async (req, res) => {
     const end_hour = req.body['end_hour'];
     const end_minute = req.body['end_minute'];
     const gregorian_chinese = req.body['gregorian_chinese'];
-    let start_year, start_month, start_day
-    let end_year, end_month, end_day
+    let start_year : number, start_month: number, start_day: number
+    let end_year: number, end_month: number, end_day: number
 
     if(gregorian_chinese === 'gregorian_date'){
       [start_year, start_month, start_day] = parseDate(start_date);
       [end_year, end_month, end_day] = parseDate(end_date);
+
+    // chinese date
     }else{
       [start_year, start_month, start_day] = chinese_date_convertor(start_date);
       [end_year, end_month, end_day] = chinese_date_convertor(end_date);
@@ -63,7 +65,9 @@ app.post('/submit', async (req, res) => {
       end_minute
     });
 
-    console.log(query_result)
+
+
+    console.log(query_result.length)
     
     // Send a response back to the client
     res.json({ query_result });
