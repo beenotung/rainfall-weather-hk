@@ -2,23 +2,26 @@ import { any } from '@beenotung/tslib'
 import { Calendar } from '@fullcalendar/core'
 import multiMonthPlugin from '@fullcalendar/multimonth'
 import { response } from 'express'
+import {Event} from './types'
 
 let query_result //Pre-declare a variable to store the result of db query
+let calendar : Calendar | null = null;
 const input = document.querySelector('#user_input_form') as HTMLFormElement
+
 async function main() {
   let res = await fetch('/data')
   let json = await res.json()
   const calendarEl = document.getElementById('calendar')
-  const calendar = new Calendar(calendarEl!, {
+  calendar = new Calendar(calendarEl!, {
     plugins: [multiMonthPlugin],
     initialView: 'multiMonthYear',
     initialDate: '2024-01-01',
     headerToolbar: false,          // Hide navigation
     footerToolbar: false,          // Hide navigation
     editable: false,               // Prevent event editing
-    selectable: false, 
-  })
-
+    selectable: false,
+    events: []
+  }) 
   calendar.render()
 }
 
@@ -49,25 +52,40 @@ function compareTime(start_hour : string, start_minute:string, end_hour:string, 
   return true 
 }
 
-function event_creator(query_result : object[]){
-  interface Event  { //Declare a event object
-    id: number, 
-    title: string,
-    start: string
-  }
+//Function to format date to "YYYY-MM-DD" format 
+function formatDate( month: number, day:number ) {
+  const mm = String(month).padStart(2, '0');
+  const dd = String(day).padStart(2, '0');
+  return `2024-${mm}-${dd}`;
+}
 
-  let events : Event[] = [] //Create a list of event 
+//Take the query_result 
+/*{
+    month: 4,
+    day: 10,
+    total_amount: 0,
+    data_count: 1,
+    average_amount: 0
+  }
+*/
+//And parse it to a event object 
+//Then render it 
+function event_creator(query_result : object[]){
+  //Remove all previous event
+  calendar?.removeAllEvents()
 
   for(let i = 0; i < query_result.length; i++){
     const item = query_result[i] as any;
     const event : Event = {
-      id: i,
-      title: String(item.average_amount),
-      start: `2024-${item.month}-${item.day}`
+      id: `${i}`,
+      title: `${item.average_amount}`,
+      start: formatDate(item.month, item.day),
     }
-    events.push(event)
+    
+    calendar?.addEvent(event)
   }
-  return events
+  calendar?.render()
+  
 }
 
 input.addEventListener('submit', (event) => {
@@ -104,7 +122,9 @@ input.addEventListener('submit', (event) => {
         },
         body: JSON.stringify(data)
     }).then(response => response.json())
-      .then(data => {query_result = data.query_result;});
+      .then(data => {
+        console.log(data.query_result);
+        event_creator(data.query_result);});
   }
 });
 

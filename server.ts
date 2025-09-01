@@ -23,7 +23,7 @@ app.listen(port, () => {
 app.post('/submit', async (req, res) => {
   try {
     // req.body contains the JSON sent from the client
-    console.log('Received data:', req.body);
+    console.log('Received data:', req.body);  
 
     const district = req.body['district'];
     const start_date = req.body['start_date'];
@@ -33,8 +33,17 @@ app.post('/submit', async (req, res) => {
     const end_hour = req.body['end_hour'];
     const end_minute = req.body['end_minute'];
     const gregorian_chinese = req.body['gregorian_chinese'];
-    const [start_year, start_month, start_day] = parseDate(start_date);
-    const [end_year, end_month, end_day] = parseDate(end_date);
+    let start_year, start_month, start_day
+    let end_year, end_month, end_day
+
+    if(gregorian_chinese === 'gregorian_date'){
+      [start_year, start_month, start_day] = parseDate(start_date);
+      [end_year, end_month, end_day] = parseDate(end_date);
+    }else{
+      const [chinese_start_date, chinese_end_date] = date_convertor(start_date, end_date) as [string, string]
+      [start_year, start_month, start_day] = parseDate(chinese_start_date);
+      [end_year, end_month, end_day] = parseDate(chinese_end_date);
+    }
 
     // Await the async rainfall_sum function
     let query_result = await rainfall_sum({
@@ -51,6 +60,8 @@ app.post('/submit', async (req, res) => {
       end_minute
     });
 
+    console.log(query_result)
+    
     // Send a response back to the client
     res.json({ query_result });
   } catch (error) {
@@ -65,17 +76,33 @@ function parseDate(date : string) {
   return [parseInt(year, 10), parseInt(month, 10), parseInt(day, 10)]
 }
 
+//Function to convert chinese date into gregorian date 
+function date_convertor(start_date : string, end_date: string) : [string, string]{
+  const [start_year, start_month, start_day] = start_date.split('-') //Assume the input of user is in Chinese date
+  const [end_year, end_month, end_day] = end_date.split('-')
+  let [start_chinese_cycle, start_chinese_year, start_chinese_leap] =  gregorian_to_chinese_date(start_date)
+  let [end_chinese_cycle, end_chinese_year, end_chinese_leap] =  gregorian_to_chinese_date(end_date)
+
+  let start_cal = new CalendarChinese(start_chinese_cycle, start_chinese_year, parseInt(start_month,10), start_chinese_leap, parseInt(start_day, 10))
+  let end_cal = new CalendarChinese(end_chinese_cycle, end_chinese_year, parseInt(end_month,10), end_chinese_leap, parseInt(end_day, 10))
+  
+  let chinese_start_date = start_cal.toGregorian(parseInt(start_year,10))
+  let chinese_end_date = end_cal.toGregorian(parseInt(end_year,10))
+
+  console.log(typeof(chinese_start_date.year), chinese_end_date)
+
+  let formatted_chinese_start_date = formatDate(chinese_start_date.year, chinese_start_date.month, chinese_start_date.day)
+  let formatted_chinese_end_date = formatDate(chinese_end_date.year, chinese_end_date.month, chinese_end_date.day)
+  return [ formatted_chinese_start_date, formatted_chinese_end_date ]
+}
+
 //Function to convert gregorian date to chinese date
-function gregorian_to_chinese_date(date : string) : number[][] {
-  const [month, day] = date.split('-')
-  let date_list = []
-  for(let year = 2002; year < 2024; year++){
-    let cal = new CalendarChinese()
-    cal.fromGregorian(year, parseInt(month, 10), parseInt(day, 10))
-    let [chinese_cycle, chinese_year, chinese_month, chinese_leap, chinese_day] = cal.get()
-    date_list.push([year, chinese_month, chinese_day])
-  }
-  return date_list
+function gregorian_to_chinese_date(date: string){
+  const [year, month, day] = date.split('-').map(Number)
+  let cal = new CalendarChinese()
+  cal.fromGregorian(year, month, day)
+  const [chinese_cycle, chinese_year, chinese_month, chinese_leap, chinese_day] = cal.get()
+  return [chinese_cycle, chinese_year, chinese_leap] //Return Chinese cycle and year, then use it to convert by to Gregorian date
 }
 
 //Function to query db given a range of date
@@ -112,7 +139,7 @@ async function rainfall_sum(options:{
     let average = query_result[i]['total_amount'] / query_result[i]['data_count']
     query_result[i]['average_amount'] = Number(formatNumber(average));
   }
-  console.log(query_result)
+
   return query_result
 }
 
@@ -233,4 +260,11 @@ function formatNumber(x: number) {
     return x.toFixed(4)
   }
   return x.toExponential(3)
+}
+
+//Function to format date to "YYYY-MM-DD" format 
+function formatDate(year: number, month: number, day:number ) : string{
+  const mm = String(month).padStart(2, '0');
+  const dd = String(day).padStart(2, '0');
+  return `${year}-${mm}-${dd}`;
 }
