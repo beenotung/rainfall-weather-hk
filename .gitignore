@@ -10,3 +10,4 @@ dist/
 db.sqlite3*
 sample.html
 bundle.js
+todo.txt
