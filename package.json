@@ -31,8 +31,11 @@
   "dependencies": {
     "@beenotung/html-parser": "^1.2.1",
     "@beenotung/tslib": "^22.1.1",
+    "@fullcalendar/core": "^6.1.19",
+    "@fullcalendar/multimonth": "^6.1.19",
     "better-sqlite3-proxy": "^2.4.1",
     "better-sqlite3-schema": "^3.1.2",
+    "date-chinese": "^2.1.4",
     "debug": "^4.3.4",
     "express": "^5.1.0",
     "knex": "^2.4.2",
