@@ -92,6 +92,7 @@ input.addEventListener('submit', (event) => {
   //Prevent refresh
   event?.preventDefault()
   
+  // Rain fall data range
   const district = document.querySelector('#district_input') as HTMLSelectElement;
   const start_date = document.querySelector('#start_date_input') as HTMLInputElement;
   const end_date = document.querySelector('#end_date_input') as HTMLInputElement;
@@ -99,7 +100,19 @@ input.addEventListener('submit', (event) => {
   const start_minute = document.querySelector('#start_minute_input') as HTMLSelectElement;
   const end_hour = document.querySelector('#end_hour_input') as HTMLSelectElement;
   const end_minute = document.querySelector('#end_minute_input') as HTMLSelectElement;
+
+  // Selected range to show
+  const selected_months_ele = document.querySelectorAll('input[name="selected_months"]:checked') as NodeListOf<HTMLInputElement>;
+  const selected_months = Array.from(selected_months_ele).filter(input => input.checked).map(input => input.value);
+  const selected_start_day = document.querySelector('input[name="selected_start_day"]') as HTMLInputElement;
+  const selected_end_day = document.querySelector('input[name="selected_end_day"]') as HTMLInputElement;
+
+  // Select Gregorian/Chinese date option
   const gregorian_chinese_date = document.querySelector('input[name="gregorian_chinese_option"]:checked') as HTMLInputElement
+
+  console.log(selected_months)
+  console.log(selected_end_day)
+  console.log(selected_start_day)
   
   if( compareDate(start_date.value, end_date.value) 
     && compareTime(start_hour.value, start_minute.value, end_hour.value, end_minute.value) ){
@@ -112,6 +125,9 @@ input.addEventListener('submit', (event) => {
       start_minute: start_minute.value,
       end_hour: end_hour.value,
       end_minute: end_minute.value,
+      selected_months: selected_months,
+      selected_start_day: selected_start_day?.value,
+      selected_end_day: selected_end_day?.value,
       gregorian_chinese: gregorian_chinese_date.value
     }
   

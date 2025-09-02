@@ -2,7 +2,7 @@
 <html lang="en">
   <title>Rainfall Weather HK</title>
   <body>
-    <h1>Rainfall Weather HK</h1>
+    <h2>Rainfall Weather HK</h2>
     <div id = 'user_input' class = 'user_input'>
       <form id = 'user_input_form'>
         <div id = "district_group" class = "district_group">
@@ -133,17 +133,14 @@
             <option value= "45" selected>45</option>
           </select>
         </div>
-        <h2></h2>
-
+        <h4></h4>
         <div id = "select_month" class = "select_month">
-          <label for = "select_month">Select Months For Average Rainfall: (Multiple Choice)</label>
+          <label for = "select_month">Select Months For Average Rainfall: (Multiple Choice, empty for all months)</label>
           <table>
             <tr>
               <td><input type="checkbox" name="selected_months" value="1"> Jan</td>
               <td><input type="checkbox" name="selected_months" value="2"> Feb</td>
               <td><input type="checkbox" name="selected_months" value="3"> Mar</td>
-            </tr>
-            <tr>
               <td><input type="checkbox" name="selected_months" value="4"> Apr</td>
               <td><input type="checkbox" name="selected_months" value="5"> May</td>
               <td><input type="checkbox" name="selected_months" value="6"> Jun</td>
@@ -152,24 +149,18 @@
               <td><input type="checkbox" name="selected_months" value="7"> Jul</td>
               <td><input type="checkbox" name="selected_months" value="8"> Aug</td>
               <td><input type="checkbox" name="selected_months" value="9"> Sep</td>
-            </tr>
-            <tr>
               <td><input type="checkbox" name="selected_months" value="10"> Oct</td>
               <td><input type="checkbox" name="selected_months" value="11"> Nov</td>
               <td><input type="checkbox" name="selected_months" value="12"> Dec</td>
             </tr>
           </table>
         </div>
-
-
         <div id = "select_day" class = "select_day">
           <!-- if selected start and end day is same, mean only elsect one day -->
-          <label>From : <input type = "number" name = "selected_start_day" min = "1" max = "31"></label>
-          <label>To : <input type = "number" name = "selected_end_day" min = "1" max = "31"></label>
+          <label>From: (Null for all days) <input type = "number" name = "selected_start_day" min = "1" max = "31"></label>
+          <label>To: <input type = "number" name = "selected_end_day" min = "1" max = "31"></label>
         </div>
-
-        <h2></h2>
-
+        <h4></h4>
         <div id = "gregorian_chinese_option_group">
           <label for = "gregorian_chinese_option">Gregorian Date/Chinese Date: </label>
 
@@ -179,7 +170,6 @@
           <input type="radio" id="chinese_date" name="gregorian_chinese_option" value="chinese_date" />
           <label for="chinese_date">Chinese Date</label>
         </div>
-
         <button id = "submit_button" type = "submit">Submit</button>
         <button id = "reset_button" type = "reset">Reset</button>
       </form>
