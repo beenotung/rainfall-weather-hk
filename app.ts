@@ -25,6 +25,14 @@ async function main() {
   calendar.render()
 }
 
+function compareYear(start_year: string, end_year: string) : boolean{
+ if(parseInt(start_year, 10) > parseInt(end_year, 10)){
+    alert("Start year cannot be greater than end year")
+    return false
+  }
+  return true
+}
+
 function compareDate(start_date : string, end_date : string) : boolean{
   let [start_month, start_day] = start_date.split('-') 
   let [end_month, end_day] = end_date.split('-') 
@@ -94,8 +102,12 @@ input.addEventListener('submit', (event) => {
   
   // Rain fall data range
   const district = document.querySelector('#district_input') as HTMLSelectElement;
-  const start_date = document.querySelector('#start_date_input') as HTMLInputElement;
-  const end_date = document.querySelector('#end_date_input') as HTMLInputElement;
+  //const start_date = document.querySelector('#start_date_input') as HTMLInputElement;
+  //const end_date = document.querySelector('#end_date_input') as HTMLInputElement;
+
+  const start_year = document.querySelector('#start_year') as HTMLSelectElement;
+  const end_year = document.querySelector('#end_year') as HTMLSelectElement;
+
   const start_hour = document.querySelector('#start_hour_input') as HTMLSelectElement;
   const start_minute = document.querySelector('#start_minute_input') as HTMLSelectElement;
   const end_hour = document.querySelector('#end_hour_input') as HTMLSelectElement;
@@ -113,14 +125,16 @@ input.addEventListener('submit', (event) => {
   console.log(selected_months)
   console.log(selected_end_day)
   console.log(selected_start_day)
-  
-  if( compareDate(start_date.value, end_date.value) 
+
+  if( compareYear(start_year.value, end_year.value) 
     && compareTime(start_hour.value, start_minute.value, end_hour.value, end_minute.value) ){
 
     const data = {
       district: district.value,
-      start_date: start_date.value,
-      end_date: end_date.value,
+      start_year: start_year.value,
+      end_year: end_year.value,
+      //start_date: start_date.value,
+      //end_date: end_date.value,
       start_hour: start_hour.value,
       start_minute: start_minute.value,
       end_hour: end_hour.value,

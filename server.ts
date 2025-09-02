@@ -62,6 +62,7 @@ app.post('/submit', async (req, res) => {
     //console.log(selected_end_day)
 
     // Await the async rainfall_sum function
+    /*
     let query_result = await rainfall_sum({
       district,
       start_year,
@@ -75,7 +76,7 @@ app.post('/submit', async (req, res) => {
       end_hour,
       end_minute
     });
-
+    */
 
 
     //console.log(query_result.length)
