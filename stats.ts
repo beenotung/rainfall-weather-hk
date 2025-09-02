@@ -30,23 +30,66 @@ type DateMode = "chinese" | "western";
 
 type TimeMode = "15min" | "2hr" | "12hr" | "24hr";
 
-function onYearRange(years: [start: number, end: number]) {
+
+
+
+export function onYearRange(
+  years: [start: number, end: number],
+  months: [start: number, end: number] = [1, 12],
+  days: [start: number, end: number] = [1, 31],
+  // If district_id is 0, all districts are included
+  district_id: number = 0
+) {
   let [start, end] = years;
   for (let year = start; year <= end; year++) {
-    onYear(year);
+    onRange(year, months, days, district_id);
   }
 }
 
-function onYear(year: number) {
+function onRange(
+  year: number,
+  months: [start: number, end: number],
+  days: [start: number, end: number],
+  district_id: number
+) {
   process.stdout.write(`\r year: ${year}` + " ".repeat(10));
-  let dates = filter(proxy.date, { year });
+
+  let [start_month, end_month] = months
+  let [start_day, end_day] = days
+
+  let district_ids
+
+  if (district_id === 0) {
+    // If district_id is 0, all districts are included
+    district_ids = Array.from({length: 22}, (_, i) => i + 1)
+  }
+  else{
+    district_ids = [district_id]
+  }
+
+
+  let dates = filter(proxy.date, { year }).filter(date => {
+    return date.month >= start_month && 
+           date.month <= end_month && 
+           date.day >= start_day && 
+           date.day <= end_day;
+  });
+
+  //console.log(`Found ${dates.length} dates for year ${year}`);
+
+
+  //let dates = filter(proxy.date, { year });
   for (let date of dates) {
-    let rows = filter(proxy.rainfall, {
-      date_id: date.id!,
-      district_id: 1,
-    });
-    for (let row of rows) {
-      onRow(row);
+    
+    for (let district_id of district_ids) {
+      let rows = filter(proxy.rainfall, {
+        date_id: date.id!,
+        district_id: district_id,
+      });
+      //console.log(`Found ${rows.length} rows for date ${date.id}`);
+      for (let row of rows) {
+        onRow(row);
+      }
     }
   }
 }
@@ -108,7 +151,20 @@ function main() {
   debugger;
   console.log(counters);
 }
-main();
+
+
+// get counters
+export function get_counters(){
+  return counters
+}
+
+export function reset_counters(){
+  counters = []
+}
+
+
+
+//main();
 
 /*let query = knex("rainfall");
 if (1) {

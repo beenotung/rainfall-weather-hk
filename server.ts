@@ -57,9 +57,9 @@ app.post('/submit', async (req, res) => {
       [end_year, end_month, end_day] = chinese_date_convertor(end_date);
     }
 
-    console.log(selected_months)
-    console.log(selected_start_day)
-    console.log(selected_end_day)
+    //console.log(selected_months)
+    //console.log(selected_start_day)
+    //console.log(selected_end_day)
 
     // Await the async rainfall_sum function
     let query_result = await rainfall_sum({
