@@ -44,10 +44,24 @@ app.post('/submit', async (req, res) => {
     const selected_end_day = req.body['selected_end_day'] || null
 
     const gregorian_chinese = req.body['gregorian_chinese'];
-    let start_year : number, start_month: number, start_day: number
-    let end_year: number, end_month: number, end_day: number
 
-    if(gregorian_chinese === 'gregorian_date'){
+
+    // call function to get needed data by retrieved information 
+
+
+    // return result as json and respond
+
+
+
+
+    /* drop code */ 
+
+    //let start_year : number, start_month: number, start_day: number
+    //let end_year: number, end_month: number, end_day: number
+
+
+
+    /*if(gregorian_chinese === 'gregorian_date'){
       [start_year, start_month, start_day] = parseDate(start_date);
       [end_year, end_month, end_day] = parseDate(end_date);
 
@@ -55,7 +69,7 @@ app.post('/submit', async (req, res) => {
     }else{
       [start_year, start_month, start_day] = chinese_date_convertor(start_date);
       [end_year, end_month, end_day] = chinese_date_convertor(end_date);
-    }
+    }*/
 
     //console.log(selected_months)
     //console.log(selected_start_day)
