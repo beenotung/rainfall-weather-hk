@@ -1,5 +1,7 @@
 import { filter } from "better-sqlite3-proxy";
 import { proxy, Rainfall } from "./proxy";
+import { knex } from "./knex";
+import { db } from "./db";
 
 type CounterItem = {
   total: number;
@@ -102,8 +104,17 @@ function to_time_index(hour: number, minute: number) {
 }
 
 function main() {
-  onYearRange([2020, 2025]);
+  onYearRange([2020, 2023]);
   debugger;
   console.log(counters);
 }
 main();
+
+/*let query = knex("rainfall");
+if (1) {
+  query = query.where("year", ">=", 2020);
+} else {
+  query = query.where("chinese_year", ">=", 2020);
+}
+let { sql, bindings } = query.toSQL();
+let result = db.prepare(sql).all(bindings);*/

@@ -33,8 +33,10 @@
             <option value= "九龍東">九龍東</option>
           </select>
         </div>
+
+
         <div id ="start_date_group" class = "start_date_group">
-          <label for="start_date_input">Start (MM-DD):</label>
+          <label for="start_date_input">Data Range Start (MM-DD):</label>
           <input
             type="date"
             id="start_date_input"
@@ -45,7 +47,7 @@
           >
         </div>
         <div id = "end_date_group" class = "end_date_group">
-          <label for="end_date_input">End (MM-DD):</label>
+          <label for="end_date_input">Data Range End (MM-DD):</label>
           <input
             type="date"
             id="end_date_input"
@@ -55,8 +57,10 @@
             value="2023-12-31"
           >
         </div>
+        
+
         <div id = "start_time_input_group" class = "start_time_input_group">
-          <label for = "start_hour_input">Start Hour: </label>
+          <label for = "start_hour_input">Data Range Start Hour: </label>
           <select id = "start_hour_input" name = "start_hour_input">
             <option value= "00" selected>00</option>
             <option value= "01">01</option>
@@ -92,8 +96,9 @@
           </select>
         </div>
 
+
         <div id = "end_time_input_group" class = "end_time_input_group">
-          <label for = "end_hour_input">End Hour: </label>
+          <label for = "end_hour_input">Data Range End Hour: </label>
           <select id = "end_hour_input" name = "end_hour_input">
             <option value= "00">00</option>
             <option value= "01">01</option>
@@ -128,6 +133,43 @@
             <option value= "45" selected>45</option>
           </select>
         </div>
+        <h2></h2>
+
+        <div id = "select_month" class = "select_month">
+          <label for = "select_month">Select Months For Average Rainfall: (Multiple Choice)</label>
+          <table>
+            <tr>
+              <td><input type="checkbox" name="selected_months" value="1"> Jan</td>
+              <td><input type="checkbox" name="selected_months" value="2"> Feb</td>
+              <td><input type="checkbox" name="selected_months" value="3"> Mar</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="selected_months" value="4"> Apr</td>
+              <td><input type="checkbox" name="selected_months" value="5"> May</td>
+              <td><input type="checkbox" name="selected_months" value="6"> Jun</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="selected_months" value="7"> Jul</td>
+              <td><input type="checkbox" name="selected_months" value="8"> Aug</td>
+              <td><input type="checkbox" name="selected_months" value="9"> Sep</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="selected_months" value="10"> Oct</td>
+              <td><input type="checkbox" name="selected_months" value="11"> Nov</td>
+              <td><input type="checkbox" name="selected_months" value="12"> Dec</td>
+            </tr>
+          </table>
+        </div>
+
+
+        <div id = "select_day" class = "select_day">
+          <!-- if selected start and end day is same, mean only elsect one day -->
+          <label>From : <input type = "number" name = "selected_start_day" min = "1" max = "31"></label>
+          <label>To : <input type = "number" name = "selected_end_day" min = "1" max = "31"></label>
+        </div>
+
+        <h2></h2>
+
         <div id = "gregorian_chinese_option_group">
           <label for = "gregorian_chinese_option">Gregorian Date/Chinese Date: </label>
 
