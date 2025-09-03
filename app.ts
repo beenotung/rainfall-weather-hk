@@ -84,9 +84,12 @@ function event_creator(query_result : object[]){
 
   for(let i = 0; i < query_result.length; i++){
     const item = query_result[i] as any;
+    console.log(item.month)
+    console.log(item.day)
+
     const event : Event = {
       id: `${i}`,
-      title: `${item.average_amount}`,
+      title: `${item.average}`,
       start: formatDate(item.month, item.day),
     }
     

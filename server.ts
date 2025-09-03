@@ -47,7 +47,11 @@ app.post('/submit', async (req, res) => {
 
     const gregorian_chinese = req.body['gregorian_chinese'];
 
-    console.log(get_average_rainfall_from_request(req.body))
+    const query_result = get_average_rainfall_from_request(req.body)
+    console.log(query_result)
+    console.log(query_result.length)
+
+    res.json({query_result})
 
 
     // call function to get needed data by retrieved information 
@@ -101,6 +105,8 @@ app.post('/submit', async (req, res) => {
     
     // Send a response back to the client
     //res.json({ query_result });
+
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });

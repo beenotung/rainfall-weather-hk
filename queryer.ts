@@ -10,7 +10,7 @@ todo:
 
 */
 
-type RequestData = {
+type QueryOption = {
     years: [number, number],
     months: number[],
     days: [number, number],
@@ -20,13 +20,20 @@ type RequestData = {
     chinese_date: boolean
 }
 
-
+// return object for rainfall data
+type ReturnData = {
+    month: number,
+    day: number,
+    total: number, 
+    count: number,
+    average: number
+}
 
 
 export function get_average_rainfall_from_request(req_data: any){
 
     // init step, reset counter
-    stats.reset_counters
+    stats.reset_counters()
 
     // step 1, split data from request
     const data = split_data(req_data)
@@ -36,18 +43,17 @@ export function get_average_rainfall_from_request(req_data: any){
 
     // step 3, get data from stats (counters)
     const rainfall = get_counter_by_data(data)
+    console.log(rainfall)
 
-    // step 4, calculate average rainfall
+    // step 4, convert counters to return data format
+    const returnData = convert_counters_to_return_data(rainfall)
 
-
-
-
-    return rainfall
+    return returnData
 
 }
 
 
-export function split_data(data: any) : RequestData {
+function split_data(data: any) : QueryOption {
     let district
     if (data['district'] === 'All'){
         district = 0;
@@ -74,7 +80,50 @@ export function split_data(data: any) : RequestData {
     }
 } 
 
-function get_counter_by_data(data: RequestData) {
+
+function get_counter_by_data(data: QueryOption) {
     stats.onYearRange(data.years, data.months, data.days, data.hour, data.minute, data.district_id);
     return stats.get_counters();
 }
+
+/*
+type Counters = {
+  [district_id: number]: {
+    [month: number]: {
+      [day: number]: {total: number, count: number};
+    };
+  };
+};
+*/
+
+
+
+
+function convert_counters_to_return_data(counters: any) : ReturnData[]{
+    const results: ReturnData[] = [];
+    
+    for (let district_id in counters){
+        for (let month in counters[district_id]){
+            const month_num = parseInt(month);
+            
+            for (let day in counters[district_id][month]){
+                const day_num = parseInt(day);
+                const data = counters[district_id][month][day];
+                
+                // Calculate average: total / count
+                const average = data.count > 0 ? data.total / data.count : 0;
+                
+                results.push({
+                    month: month_num,
+                    day: day_num,
+                    total: data.total,
+                    count: data.count,
+                    average: average
+                });
+            }
+        }
+    }
+    
+    return results;
+}
+
