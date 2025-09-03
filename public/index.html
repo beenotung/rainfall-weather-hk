@@ -3,91 +3,90 @@
   <title>Rainfall Weather HK</title>
   <body>
     <h2>Rainfall Weather HK</h2>
-    <div id = 'user_input' class = 'user_input'>
-      <form id = 'user_input_form'>
-        <div id = "district_group" class = "district_group">
+    <div id="user_input" class="user_input">
+      <form id="user_input_form">
+        <div id="district_group" class="district_group">
           <label for="district_input">District:</label>
-          <select id = "district_input" name = "district_input" type="hidden">
-            <option value= "All" selected>所有</option> 
-            <option value= "1">中西區</option>
-            <option value= "2">東區</option>
-            <option value= "3">離島區</option>
-            <option value= "4">九龍城</option>
-            <option value= "5">觀塘</option>
-            <option value= "6">葵青</option>
-            <option value= "7">北區</option>
-            <option value= "8">西貢</option>
-            <option value= "9">沙田</option>
-            <option value= "10">深水埗</option>
-            <option value= "11">南區</option>
-            <option value= "12">大埔</option>
-            <option value= "13">荃灣</option>
-            <option value= "14">屯門</option>
-            <option value= "15">灣仔</option>
-            <option value= "16">黃大仙</option>
-            <option value= "17">油尖旺</option>
-            <option value= "18">元朗</option>
-            <option value= "19">大嶼山</option>
-            <option value= "20">南丫島</option>
-            <option value= "21">九龍西</option>
-            <option value= "22">九龍東</option>
+          <select id="district_input" name="district_input" type="hidden">
+            <option value="All" selected>所有</option>
+            <option value="1">中西區</option>
+            <option value="2">東區</option>
+            <option value="3">離島區</option>
+            <option value="4">九龍城</option>
+            <option value="5">觀塘</option>
+            <option value="6">葵青</option>
+            <option value="7">北區</option>
+            <option value="8">西貢</option>
+            <option value="9">沙田</option>
+            <option value="10">深水埗</option>
+            <option value="11">南區</option>
+            <option value="12">大埔</option>
+            <option value="13">荃灣</option>
+            <option value="14">屯門</option>
+            <option value="15">灣仔</option>
+            <option value="16">黃大仙</option>
+            <option value="17">油尖旺</option>
+            <option value="18">元朗</option>
+            <option value="19">大嶼山</option>
+            <option value="20">南丫島</option>
+            <option value="21">九龍西</option>
+            <option value="22">九龍東</option>
           </select>
         </div>
 
-        <div id = "data_range_start_year" class = "data_range_start_year">
-          <label for = "start_year">Start Year of Data Range:</label>
-          <select id = "start_year" name = "start_year">
-            <option value = "2003">2003</option>
-            <option value = "2004">2004</option>
-            <option value = "2005">2005</option>
-            <option value = "2006">2006</option>
-            <option value = "2007">2007</option>
-            <option value = "2008">2008</option>
-            <option value = "2009">2009</option>
-            <option value = "2010">2010</option>
-            <option value = "2011">2011</option>
-            <option value = "2012">2012</option>
-            <option value = "2013">2013</option>
-            <option value = "2014">2014</option>
-            <option value = "2015">2015</option>
-            <option value = "2016">2016</option>
-            <option value = "2017">2017</option>
-            <option value = "2018">2018</option>
-            <option value = "2019">2019</option>
-            <option value = "2020">2020</option>
-            <option value = "2021">2021</option>
-            <option value = "2022">2022</option>
-            <option value = "2023">2023</option>
+        <div id="data_range_start_year" class="data_range_start_year">
+          <label for="start_year">Start Year of Data Range:</label>
+          <select id="start_year" name="start_year">
+            <option value="2003">2003</option>
+            <option value="2004">2004</option>
+            <option value="2005">2005</option>
+            <option value="2006">2006</option>
+            <option value="2007">2007</option>
+            <option value="2008">2008</option>
+            <option value="2009">2009</option>
+            <option value="2010">2010</option>
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
           </select>
         </div>
 
-        <div id = "data_range_end_year" class = "data_range_end_year">
-          <label for = "end_year">End Year of Data Range:</label>
-          <select id = "end_year" name = "end_year">
-            <option value = "2003">2003</option>
-            <option value = "2004">2004</option>
-            <option value = "2005">2005</option>
-            <option value = "2006">2006</option>
-            <option value = "2007">2007</option>
-            <option value = "2008">2008</option>
-            <option value = "2009">2009</option>
-            <option value = "2010">2010</option>
-            <option value = "2011">2011</option>
-            <option value = "2012">2012</option>
-            <option value = "2013">2013</option>
-            <option value = "2014">2014</option>
-            <option value = "2015">2015</option>
-            <option value = "2016">2016</option>
-            <option value = "2017">2017</option>
-            <option value = "2018">2018</option>
-            <option value = "2019">2019</option>
-            <option value = "2020">2020</option>
-            <option value = "2021">2021</option>
-            <option value = "2022">2022</option>
-            <option value = "2023">2023</option>
+        <div id="data_range_end_year" class="data_range_end_year">
+          <label for="end_year">End Year of Data Range:</label>
+          <select id="end_year" name="end_year">
+            <option value="2003">2003</option>
+            <option value="2004">2004</option>
+            <option value="2005">2005</option>
+            <option value="2006">2006</option>
+            <option value="2007">2007</option>
+            <option value="2008">2008</option>
+            <option value="2009">2009</option>
+            <option value="2010">2010</option>
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
           </select>
         </div>
-
 
         <!--
         <div id ="start_date_group" class = "start_date_group">
@@ -113,125 +112,177 @@
           >
         </div>
         -->
-        
 
-        <div id = "start_time_input_group" class = "start_time_input_group">
-          <label for = "start_hour_input">Data Range Start Hour: </label>
-          <select id = "start_hour_input" name = "start_hour_input">
-            <option value= "00" selected>00</option>
-            <option value= "01">01</option>
-            <option value= "02">02</option>
-            <option value= "03">03</option>
-            <option value= "04">04</option>
-            <option value= "05">05</option>
-            <option value= "06">06</option>
-            <option value= "07">07</option>
-            <option value= "08">08</option>
-            <option value= "09">09</option>
-            <option value= "10">10</option>
-            <option value= "11">11</option>
-            <option value= "12">12</option>
-            <option value= "13">13</option>
-            <option value= "14">14</option>
-            <option value= "15">15</option>
-            <option value= "16">16</option>
-            <option value= "17">17</option>
-            <option value= "18">18</option>
-            <option value= "19">19</option>
-            <option value= "20">20</option>
-            <option value= "21">21</option>
-            <option value= "22">22</option>
-            <option value= "23">23</option>
+        <div id="start_time_input_group" class="start_time_input_group">
+          <label for="start_hour_input">Data Range Start Hour: </label>
+          <select id="start_hour_input" name="start_hour_input">
+            <option value="00" selected>00</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
           </select>
-          <label for = "start_minute_input">Start Minute: </label>
-          <select id = "start_minute_input" name = "start_minute_input">
-            <option value= "00" selected>00</option>
-            <option value= "15">15</option>
-            <option value= "30">30</option>
-            <option value= "45">45</option>
+          <label for="start_minute_input">Start Minute: </label>
+          <select id="start_minute_input" name="start_minute_input">
+            <option value="00" selected>00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
           </select>
         </div>
 
-
-        <div id = "end_time_input_group" class = "end_time_input_group">
-          <label for = "end_hour_input">Data Range End Hour: </label>
-          <select id = "end_hour_input" name = "end_hour_input">
-            <option value= "00">00</option>
-            <option value= "01">01</option>
-            <option value= "02">02</option>
-            <option value= "03">03</option>
-            <option value= "04">04</option>
-            <option value= "05">05</option>
-            <option value= "06">06</option>
-            <option value= "07">07</option>
-            <option value= "08">08</option>
-            <option value= "09">09</option>
-            <option value= "10">10</option>
-            <option value= "11">11</option>
-            <option value= "12">12</option>
-            <option value= "13">13</option>
-            <option value= "14">14</option>
-            <option value= "15">15</option>
-            <option value= "16">16</option>
-            <option value= "17">17</option>
-            <option value= "18">18</option>
-            <option value= "19">19</option>
-            <option value= "20">20</option>
-            <option value= "21">21</option>
-            <option value= "22">22</option>
-            <option value= "23" selected>23</option>
+        <div id="end_time_input_group" class="end_time_input_group">
+          <label for="end_hour_input">Data Range End Hour: </label>
+          <select id="end_hour_input" name="end_hour_input">
+            <option value="00">00</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23" selected>23</option>
           </select>
-          <label for = "end_minute_input">End Minute: </label>
-          <select id = "end_minute_input" name = "end_minute_input">
-            <option value= "00">00</option>
-            <option value= "15">15</option>
-            <option value= "30">30</option>
-            <option value= "45" selected>45</option>
+          <label for="end_minute_input">End Minute: </label>
+          <select id="end_minute_input" name="end_minute_input">
+            <option value="00">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45" selected>45</option>
           </select>
         </div>
         <h4></h4>
-        <div id = "select_month" class = "select_month">
-          <label for = "select_month">Select Months For Average Rainfall: (Multiple Choice, empty for all months)</label>
+        <div id="select_month" class="select_month">
+          <label for="select_month"
+            >Select Months For Average Rainfall: (Multiple Choice, empty for all
+            months)</label
+          >
           <table>
             <tr>
-              <td><input type="checkbox" name="selected_months" value="1"> Jan</td>
-              <td><input type="checkbox" name="selected_months" value="2"> Feb</td>
-              <td><input type="checkbox" name="selected_months" value="3"> Mar</td>
-              <td><input type="checkbox" name="selected_months" value="4"> Apr</td>
-              <td><input type="checkbox" name="selected_months" value="5"> May</td>
-              <td><input type="checkbox" name="selected_months" value="6"> Jun</td>
+              <td>
+                <input type="checkbox" name="selected_months" value="1" /> Jan
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="2" /> Feb
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="3" /> Mar
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="4" /> Apr
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="5" /> May
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="6" /> Jun
+              </td>
             </tr>
             <tr>
-              <td><input type="checkbox" name="selected_months" value="7"> Jul</td>
-              <td><input type="checkbox" name="selected_months" value="8"> Aug</td>
-              <td><input type="checkbox" name="selected_months" value="9"> Sep</td>
-              <td><input type="checkbox" name="selected_months" value="10"> Oct</td>
-              <td><input type="checkbox" name="selected_months" value="11"> Nov</td>
-              <td><input type="checkbox" name="selected_months" value="12"> Dec</td>
+              <td>
+                <input type="checkbox" name="selected_months" value="7" /> Jul
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="8" /> Aug
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="9" /> Sep
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="10" /> Oct
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="11" /> Nov
+              </td>
+              <td>
+                <input type="checkbox" name="selected_months" value="12" /> Dec
+              </td>
             </tr>
           </table>
         </div>
-        <div id = "select_day" class = "select_day">
+        <div id="select_day" class="select_day">
           <!-- if selected start and end day is same, mean only elsect one day -->
-          <label>From: <input type = "number" name = "selected_start_day" min = "1" max = "31" value = "1"></label>
-          <label>To: <input type = "number" name = "selected_end_day" min = "1" max = "31" value = "31"></label>
+          <label
+            >From:
+            <input
+              type="number"
+              name="selected_start_day"
+              min="1"
+              max="31"
+              value="1"
+          /></label>
+          <label
+            >To:
+            <input
+              type="number"
+              name="selected_end_day"
+              min="1"
+              max="31"
+              value="31"
+          /></label>
         </div>
         <h4></h4>
-        <div id = "gregorian_chinese_option_group">
-          <label for = "gregorian_chinese_option">Gregorian Date/Chinese Date: </label>
+        <div>
+          <label for="date_mode">Gregorian Date/Chinese Date: </label>
 
-          <input type="radio" id="gregorian_date" name="gregorian_chinese_option" value="gregorian_date" checked/>
+          <input
+            type="radio"
+            id="gregorian_date"
+            name="date_mode"
+            value="gregorian_date"
+            checked
+          />
           <label for="gregorian_date">Gregorian Date</label>
 
-          <input type="radio" id="chinese_date" name="gregorian_chinese_option" value="chinese_date" />
+          <input
+            type="radio"
+            id="chinese_date"
+            name="date_mode"
+            value="chinese_date"
+          />
           <label for="chinese_date">Chinese Date</label>
         </div>
-        <button id = "submit_button" type = "submit">Submit</button>
-        <button id = "reset_button" type = "reset">Reset</button>
+        <button id="submit_button" type="submit">Submit</button>
+        <button id="reset_button" type="reset">Reset</button>
       </form>
     </div>
-    <div id='calendar'>
-      <script src='./bundle.js'></script>
+    <div id="calendar">
+      <script src="./bundle.js"></script>
     </div>
   </body>
 </html>
