@@ -28,6 +28,7 @@ app.listen(port, () => {
 
 app.post('/submit', async (req, res) => {
   try {
+    /*
     // req.body contains the JSON sent from the client
     console.log('Received data:', req.body);  
 
@@ -46,6 +47,8 @@ app.post('/submit', async (req, res) => {
     const selected_end_day = req.body['selected_end_day'] || null
 
     const gregorian_chinese = req.body['gregorian_chinese'];
+
+    */
 
     const query_result = get_average_rainfall_from_request(req.body)
     console.log(query_result)

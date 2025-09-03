@@ -69,11 +69,11 @@ function formatDate( month: number, day:number ) {
 
 //Take the query_result 
 /*{
-    month: 4,
-    day: 10,
-    total_amount: 0,
-    data_count: 1,
-    average_amount: 0
+    month: number,
+    day: number,
+    total: number,
+    count: number,
+    average: number
   }
 */
 //And parse it to a event object 
@@ -81,18 +81,22 @@ function formatDate( month: number, day:number ) {
 function event_creator(query_result : object[]){
   //Remove all previous event
   calendar?.removeAllEvents()
+  console.log("Raw query_result:", query_result)
+  console.log("Query result type:", typeof query_result)
+  console.log("Is array:", Array.isArray(query_result))
 
   for(let i = 0; i < query_result.length; i++){
     const item = query_result[i] as any;
-    console.log(item.month)
-    console.log(item.day)
+    console.log("Item:", item)
+    console.log("Month:", item.month, "Day:", item.day, "Average:", item.average)
 
     const event : Event = {
       id: `${i}`,
-      title: `${item.average}`,
+      title: `${item.average}mm`,
       start: formatDate(item.month, item.day),
     }
     
+    console.log("Created event:", event)
     calendar?.addEvent(event)
   }
   calendar?.render()
