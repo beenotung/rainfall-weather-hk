@@ -4,6 +4,7 @@ import { knex } from "./knex";
 import { db } from "./db";
 import { CalendarChinese } from "date-chinese";
 
+
 type CounterItem = {
   total: number;
   count: number;
@@ -24,16 +25,29 @@ let date_mode: DateMode = "western";
 
 type DateMode = "chinese" | "western";
 
+const default_month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+export function set_data_mode(chinese: boolean){
+  if (chinese) {
+    date_mode = "chinese";
+  } else {
+    date_mode = "western";  
+  }
+}
+
 export function onYearRange(
   years: [start: number, end: number],
-  months: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // Array of specific months
-  days: [start: number, end: number] = [1, 31],
-  hours: [start: number, end: number] = [0, 23],
-  minutes: [start: number, end: number] = [0, 59],
+  months: number[], // Array of specific months
+  days: [start: number, end: number],
+  hours: [start: number, end: number],
+  minutes: [start: number, end: number],
   // If district_id is 0, all districts are included
-  district_id: number = 0
+  district_id: number
 ) {
   let [start, end] = years;
+  if (months.length === 0) {
+    months = default_month;
+  }
   for (let year = start; year <= end; year++) {
     onRange(year, months, days, hours, minutes, district_id);
   }
@@ -158,11 +172,13 @@ export function getTimeIdsInRange(start_hour: number, end_hour: number, start_mi
   return time_ids;
 }
 
+/*
 function main() {
   onYearRange([2020, 2023]);
   debugger;
   console.log(counters);
 }
+  */
 
 // get counters
 export function get_counters(){

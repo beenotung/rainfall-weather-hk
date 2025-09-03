@@ -7,6 +7,8 @@ import { number } from '@beenotung/tslib'
 import { parseDate, chinese_date_convertor } from './convertor'
 import { rainfall_sum } from './query_handler'
 
+import { get_average_rainfall_from_request } from './queryer'
+
 
 
 let app = express()
@@ -44,6 +46,8 @@ app.post('/submit', async (req, res) => {
     const selected_end_day = req.body['selected_end_day'] || null
 
     const gregorian_chinese = req.body['gregorian_chinese'];
+
+    console.log(get_average_rainfall_from_request(req.body))
 
 
     // call function to get needed data by retrieved information 
