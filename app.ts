@@ -6,21 +6,26 @@ import type { QueryInput, QueryOutput } from './api'
 let query_result //Pre-declare a variable to store the result of db query
 let calendar: Calendar | null = null
 const input = document.querySelector('#user_input_form') as HTMLFormElement
+let current_view_year = new Date().getFullYear()
 
 async function main() {
   let res = await fetch('/data')
   let json = await res.json()
-  const current_year = new Date().getFullYear()
   const calendarEl = document.getElementById('calendar')
   calendar = new Calendar(calendarEl!, {
     plugins: [multiMonthPlugin],
     initialView: 'multiMonthYear',
-    initialDate: `${current_year}-01-01`,
-    headerToolbar: false, // Hide navigation
+    initialDate: `${current_view_year}-01-01`,
+    // headerToolbar: false, // Hide navigation
     footerToolbar: false, // Hide navigation
     editable: false, // Prevent event editing
     selectable: false,
     events: [],
+    headerToolbar: {
+      left: '',
+      center: 'title',
+      right: '',
+    },
   })
   calendar.render()
 }
@@ -67,10 +72,11 @@ function compareTime(
 }
 
 //Function to format date to "YYYY-MM-DD" format
-function formatDate(month: number, day: number) {
+function formatDate(year: number, month: number, day: number) {
   const mm = String(month).padStart(2, '0')
   const dd = String(day).padStart(2, '0')
-  return `2024-${mm}-${dd}`
+  console.log(year)
+  return `${year}-${mm}-${dd}`
 }
 
 //Take the query_result
@@ -91,8 +97,11 @@ function event_creator(query_result: QueryOutput['items']) {
   console.log('Query result type:', typeof query_result)
   console.log('Is array:', Array.isArray(query_result))
 
+  calendar?.setOption('initialDate', `${current_view_year}-01-01`)
+
   for (let i = 0; i < query_result.length; i++) {
     const item = query_result[i]
+    /*
     console.log('Item:', item)
     console.log(
       'Month:',
@@ -102,11 +111,12 @@ function event_creator(query_result: QueryOutput['items']) {
       'Average:',
       item.average,
     )
+      */
 
     const event: Event = {
       id: `${i}`,
-      title: `${item.average}mm`,
-      start: formatDate(item.month, item.day),
+      title: `${item.average.toFixed(2)}mm`,
+      start: formatDate(current_view_year, item.month, item.day),
     }
 
     console.log('Created event:', event)
@@ -154,8 +164,6 @@ input.addEventListener('submit', event => {
   const district = document.querySelector(
     '#district_input',
   ) as HTMLSelectElement
-  //const start_date = document.querySelector('#start_date_input') as HTMLInputElement;
-  //const end_date = document.querySelector('#end_date_input') as HTMLInputElement;
 
   const start_year = document.querySelector('#start_year') as HTMLSelectElement
   const end_year = document.querySelector('#end_year') as HTMLSelectElement
@@ -163,6 +171,8 @@ input.addEventListener('submit', event => {
   const view_year = document.querySelector(
     'input[name="view_year"]',
   ) as HTMLInputElement
+
+  current_view_year = +view_year.value
 
   const start_hour = document.querySelector(
     '#start_hour_input',
@@ -203,10 +213,6 @@ input.addEventListener('submit', event => {
   const date_mode = document.querySelector(
     'input[name="date_mode"]:checked',
   ) as HTMLInputElement
-
-  console.log(monthes)
-  console.log(end_day)
-  console.log(start_day)
 
   if (
     compareYearRange(+start_year.value, +end_year.value) &&
@@ -251,19 +257,15 @@ input.addEventListener('submit', event => {
       .then((data: QueryOutput) => {
         console.log('Server response:', data)
 
+        //update calender, calender should show date with view year
+        //updateCalender()
+        calendar?.gotoDate(`${current_view_year}-01-01`)
+        //calendar?.render()
         // Handle rainfall data (required)
         if (data.items) {
           console.log('Rainfall data:', data.items)
           event_creator(data.items)
         }
-
-        /*
-        // Handle Chinese data (optional)
-        if (data.chinese_data) {
-          console.log("Chinese data:", data.chinese_data);
-          event_creator_chinese(data.chinese_data);
-        }
-        */
       })
       .catch(error => {
         console.error('Error fetching data:', error)
