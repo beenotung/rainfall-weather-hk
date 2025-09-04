@@ -57,6 +57,7 @@ export function query(input: QueryInput): QueryOutput {
             if (
               viewing_chinese_dates[chinese_date.month]?.has(chinese_date.day)
             ) {
+              console.log(year, month, day)
               if (isValidDate(year, month, day)) {
                 yield { year, month, day }
               }

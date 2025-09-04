@@ -23,7 +23,7 @@ app.post('/query', async (req, res) => {
     let input = req.body
     console.log(input)
     let output = query(input)
-    console.log(output)
+    //console.log(output)
     res.json(output)
   } catch (error) {
     res.status(500)
