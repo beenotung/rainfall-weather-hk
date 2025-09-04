@@ -8,7 +8,7 @@
         <div id="district_group" class="district_group">
           <label for="district_input">District:</label>
           <select id="district_input" name="district_input" type="hidden">
-            <option value="All" selected>所有</option>
+            <option value="0" selected>所有</option>
             <option value="1">中西區</option>
             <option value="2">東區</option>
             <option value="3">離島區</option>
@@ -187,6 +187,16 @@
           </select>
         </div>
         <h4></h4>
+        <div>
+          <label for="view_year">View Year: </label>
+          <input
+            type="number"
+            name="view_year"
+            min="2025"
+            max="2030"
+            value="2025"
+          />
+        </div>
         <div id="select_month" class="select_month">
           <label for="select_month"
             >Select Months For Average Rainfall: (Multiple Choice, empty for all

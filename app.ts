@@ -164,6 +164,10 @@ input.addEventListener('submit', event => {
   const start_year = document.querySelector('#start_year') as HTMLSelectElement
   const end_year = document.querySelector('#end_year') as HTMLSelectElement
 
+  const view_year = document.querySelector(
+    'input[name="view_year"]',
+  ) as HTMLInputElement
+
   const start_hour = document.querySelector(
     '#start_hour_input',
   ) as HTMLSelectElement
@@ -182,9 +186,15 @@ input.addEventListener('submit', event => {
     'input[name="selected_months"]:checked',
   ) as NodeListOf<HTMLInputElement>
 
-  const selected_months = Array.from(selected_months_ele)
-    .filter(input => input.checked)
-    .map(input => +input.value)
+  // if no month is selected, select all months
+  let selected_months = []
+  if (selected_months_ele.length === 0) {
+    selected_months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  } else {
+    selected_months = Array.from(selected_months_ele)
+      .filter(input => input.checked)
+      .map(input => +input.value)
+  }
 
   const selected_start_day = document.querySelector(
     'input[name="selected_start_day"]',
@@ -217,6 +227,8 @@ input.addEventListener('submit', event => {
       start_year: +start_year.value,
       end_year: +end_year.value,
 
+      view_year: +view_year.value,
+
       monthes: selected_months,
 
       start_day: +selected_start_day.value,
@@ -231,7 +243,7 @@ input.addEventListener('submit', event => {
       date_mode: date_mode.value as 'gregorian_date' | 'chinese_date',
     }
 
-    fetch('submit', {
+    fetch('query', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
