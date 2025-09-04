@@ -214,6 +214,10 @@ input.addEventListener('submit', event => {
     'input[name="date_mode"]:checked',
   ) as HTMLInputElement
 
+  const time_mode = document.querySelector(
+    '#time_mode_input',
+  ) as HTMLSelectElement
+
   if (
     compareYearRange(+start_year.value, +end_year.value) &&
     compareTime(
@@ -244,6 +248,8 @@ input.addEventListener('submit', event => {
       end_minute: +end_minute.value,
 
       date_mode: date_mode.value as 'gregorian_date' | 'chinese_date',
+
+      time_mode: time_mode.value as '15mins' | '2hrs' | '12hrs' | '24hrs',
     }
 
     fetch('query', {
@@ -259,10 +265,11 @@ input.addEventListener('submit', event => {
 
         //update calender, calender should show date with view year
         //updateCalender()
-        calendar?.gotoDate(`${current_view_year}-01-01`)
+
         //calendar?.render()
         // Handle rainfall data (required)
         if (data.items) {
+          calendar?.gotoDate(`${current_view_year}-01-01`)
           console.log('Rainfall data:', data.items)
           event_creator(data.items)
         }

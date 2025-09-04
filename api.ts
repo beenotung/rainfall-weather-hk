@@ -26,7 +26,7 @@ export type QueryInput = {
 
   date_mode: 'gregorian_date' | 'chinese_date'
   // not implemented
-  // time_mode: "15h" | "2h" | "12h" | "24h";
+  time_mode: '15mins' | '2hrs' | '12hrs' | '24hrs'
 }
 
 export type QueryOutput = {

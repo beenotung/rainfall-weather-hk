@@ -3,6 +3,11 @@ import { QueryInput, QueryOutput } from './api'
 import { to_chinese_date } from './date'
 import { proxy } from './proxy'
 import { filter } from 'better-sqlite3-proxy'
+import { timeStamp } from 'console'
+
+// time mode: 15min | 2hrs | 12 hrs | 24hrs
+// average in every 15mins(every record) |
+// 2hrs (8 records) | 12hrs (48 records) | 24hrs (full day)
 
 // district -> month -> day (time aggregated within the query)
 type Counters = {
@@ -13,8 +18,25 @@ type Counters = {
   }
 }
 
+/* 
+
+type Counters = {
+  [district_id: number]: {
+    [month: number]: {
+      [day: number]: {
+        // index size calculated by time range / time mode
+        [time_index: number]:{count: number, total: number}
+      }
+    }
+  }
+}
+
+*/
+
 type CounterItem = {
+  // total amount of rainfall
   total: number
+  // how many records in time index
   count: number
 }
 
@@ -57,7 +79,7 @@ export function query(input: QueryInput): QueryOutput {
             if (
               viewing_chinese_dates[chinese_date.month]?.has(chinese_date.day)
             ) {
-              console.log(year, month, day)
+              //console.log(year, month, day)
               if (isValidDate(year, month, day)) {
                 yield { year, month, day }
               }
@@ -191,6 +213,52 @@ function getTimeIdsInRange(
   }
 
   return time_ids
+}
+
+// split time ids arrcoding to time mode
+// e.g. if time mode is 2 hrs, each object 8 time slots
+export function getTimeIdsInRangeByTimeMode(
+  time_ids: number[],
+  time_mode: '15mins' | '2hrs' | '12hrs' | '24hrs',
+) {
+  // return object array {time_ids: number[]}[]
+  // {}.length = index size calculated by time range / time mode
+  /*
+  const time_ids = getTimeIdsInRange(
+    start_hour,
+    end_hour,
+    start_minute,
+    end_minute,
+  )
+  */
+  const result: { time_ids: number[] }[] = []
+  let index_size: number
+  let arr_length: number
+  switch (time_mode) {
+    case '15mins':
+      arr_length = 1
+      index_size = time_ids.length // records store rainfall in every 15 mins
+      break
+    case '2hrs':
+      arr_length = 8
+      index_size = time_ids.length / 8 // 8 records in 2hrs
+      break
+    case '12hrs':
+      arr_length = 48
+      index_size = time_ids.length / 48 // 48 records in 12hrs
+      break
+    case '24hrs':
+      return { time_ids: time_ids }
+    default:
+      throw new Error('invalid time mode: ' + time_mode)
+  }
+
+  for (let i = 0; i < index_size; i++) {
+    result.push({
+      time_ids: time_ids.slice(i * arr_length, arr_length * (i + 1)),
+    })
+  }
+  return result
 }
 
 function isValidDate(year: number, month: number, day: number): boolean {

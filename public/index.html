@@ -88,31 +88,6 @@
           </select>
         </div>
 
-        <!--
-        <div id ="start_date_group" class = "start_date_group">
-          <label for="start_date_input">Data Range Start (MM-DD):</label>
-          <input
-            type="date"
-            id="start_date_input"
-            name="start_date_input"
-            min="2002-01-01"
-            max="2023-12-31"
-            value="2002-01-01"
-          >
-        </div>
-        <div id = "end_date_group" class = "end_date_group">
-          <label for="end_date_input">Data Range End (MM-DD):</label>
-          <input
-            type="date"
-            id="end_date_input"
-            name="end_date_input"
-            min="2002-01-01"
-            max="2023-12-31"
-            value="2023-12-31"
-          >
-        </div>
-        -->
-
         <div id="start_time_input_group" class="start_time_input_group">
           <label for="start_hour_input">Data Range Start Hour: </label>
           <select id="start_hour_input" name="start_hour_input">
@@ -184,6 +159,15 @@
             <option value="15">15</option>
             <option value="30">30</option>
             <option value="45" selected>45</option>
+          </select>
+        </div>
+        <div>
+          <label for="time_mode_input">Time Mode:</label>
+          <select id="time_mode_input" name="time_mode_input">
+            <option value="15mins">15mins</option>
+            <option value="2hrs">2hrs</option>
+            <option value="12hrs">12hrs</option>
+            <option value="24hrs" selected>24hrs</option>
           </select>
         </div>
         <h4></h4>
