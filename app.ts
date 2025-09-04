@@ -10,11 +10,12 @@ const input = document.querySelector('#user_input_form') as HTMLFormElement
 async function main() {
   let res = await fetch('/data')
   let json = await res.json()
+  const current_year = new Date().getFullYear()
   const calendarEl = document.getElementById('calendar')
   calendar = new Calendar(calendarEl!, {
     plugins: [multiMonthPlugin],
     initialView: 'multiMonthYear',
-    initialDate: '2024-01-01',
+    initialDate: `${current_year}-01-01`,
     headerToolbar: false, // Hide navigation
     footerToolbar: false, // Hide navigation
     editable: false, // Prevent event editing
@@ -24,46 +25,41 @@ async function main() {
   calendar.render()
 }
 
-function compareYear(start_year: string, end_year: string): boolean {
-  if (parseInt(start_year, 10) > parseInt(end_year, 10)) {
-    alert('Start year cannot be greater than end year')
+function compareRange(start: number, end: number): boolean {
+  if (start > end) {
     return false
   }
   return true
 }
 
-function compareDate(start_date: string, end_date: string): boolean {
-  let [start_month, start_day] = start_date.split('-')
-  let [end_month, end_day] = end_date.split('-')
-
-  if (parseInt(start_month, 10) > parseInt(end_month, 10)) {
-    alert('Start month cannot be smaller than end month')
+function compareYearRange(start_year: number, end_year: number): boolean {
+  if (!compareRange(start_year, end_year)) {
+    alert('Start year cannot be greater than end year')
     return false
   }
-  if (
-    parseInt(start_month, 10) === parseInt(end_month, 10) &&
-    parseInt(start_day, 10) > parseInt(end_day, 10)
-  ) {
-    alert('Start day cannot be smaller than end day')
+
+  return true
+}
+
+function compareDayRange(start: number, end: number): boolean {
+  if (!compareRange(start, end)) {
+    alert('Start day cannot be greater than end day')
     return false
   }
   return true
 }
 
 function compareTime(
-  start_hour: string,
-  start_minute: string,
-  end_hour: string,
-  end_minute: string,
+  start_hour: number,
+  start_minute: number,
+  end_hour: number,
+  end_minute: number,
 ): boolean {
-  if (parseInt(start_hour, 10) > parseInt(end_hour, 10)) {
+  if (!compareRange(start_hour, end_hour)) {
     alert('Start hour cannot be smaller than end hour')
     return false
   }
-  if (
-    start_hour === end_hour &&
-    parseInt(start_minute, 10) > parseInt(end_minute, 10)
-  ) {
+  if (start_hour === end_hour && !compareRange(start_minute, end_minute)) {
     alert('Start minute cannot be smaller than end minute')
     return false
   }
@@ -182,25 +178,25 @@ input.addEventListener('submit', event => {
   ) as HTMLSelectElement
 
   // Selected range to show
-  const selected_months_ele = document.querySelectorAll(
+  const monthes_ele = document.querySelectorAll(
     'input[name="selected_months"]:checked',
   ) as NodeListOf<HTMLInputElement>
 
   // if no month is selected, select all months
-  let selected_months = []
-  if (selected_months_ele.length === 0) {
-    selected_months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  let monthes = []
+  if (monthes_ele.length === 0) {
+    monthes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   } else {
-    selected_months = Array.from(selected_months_ele)
+    monthes = Array.from(monthes_ele)
       .filter(input => input.checked)
       .map(input => +input.value)
   }
 
-  const selected_start_day = document.querySelector(
-    'input[name="selected_start_day"]',
+  const start_day = document.querySelector(
+    'input[name="start_day"]',
   ) as HTMLInputElement
-  const selected_end_day = document.querySelector(
-    'input[name="selected_end_day"]',
+  const end_day = document.querySelector(
+    'input[name="end_day"]',
   ) as HTMLInputElement
 
   // Select Gregorian/Chinese date option
@@ -208,18 +204,19 @@ input.addEventListener('submit', event => {
     'input[name="date_mode"]:checked',
   ) as HTMLInputElement
 
-  console.log(selected_months)
-  console.log(selected_end_day)
-  console.log(selected_start_day)
+  console.log(monthes)
+  console.log(end_day)
+  console.log(start_day)
 
   if (
-    compareYear(start_year.value, end_year.value) &&
+    compareYearRange(+start_year.value, +end_year.value) &&
     compareTime(
-      start_hour.value,
-      start_minute.value,
-      end_hour.value,
-      end_minute.value,
-    )
+      +start_hour.value,
+      +start_minute.value,
+      +end_hour.value,
+      +end_minute.value,
+    ) &&
+    compareDayRange(+start_day.value, +end_day.value)
   ) {
     const input: QueryInput = {
       district_id: +district.value,
@@ -229,10 +226,10 @@ input.addEventListener('submit', event => {
 
       view_year: +view_year.value,
 
-      monthes: selected_months,
+      monthes: monthes,
 
-      start_day: +selected_start_day.value,
-      end_day: +selected_end_day.value,
+      start_day: +start_day.value,
+      end_day: +end_day.value,
 
       start_hour: +start_hour.value,
       end_hour: +end_hour.value,
