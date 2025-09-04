@@ -1,7 +1,7 @@
 import { Calendar } from '@fullcalendar/core'
 import multiMonthPlugin from '@fullcalendar/multimonth'
 import { Event } from './types'
-import type { QueryInput, QueryOutput } from './api'
+import type { QueryInput, QueryOutput, QueryOutput_time_mode } from './api'
 
 let query_result //Pre-declare a variable to store the result of db query
 let calendar: Calendar | null = null
@@ -97,8 +97,6 @@ function event_creator(query_result: QueryOutput['items']) {
   console.log('Query result type:', typeof query_result)
   console.log('Is array:', Array.isArray(query_result))
 
-  calendar?.setOption('initialDate', `${current_view_year}-01-01`)
-
   for (let i = 0; i < query_result.length; i++) {
     const item = query_result[i]
     /*
@@ -120,6 +118,53 @@ function event_creator(query_result: QueryOutput['items']) {
     }
 
     console.log('Created event:', event)
+    calendar?.addEvent(event)
+  }
+  calendar?.render()
+}
+
+function new_event_creator(
+  query_result: QueryOutput_time_mode['rainfall_events'],
+) {
+  calendar?.removeAllEvents()
+  console.log('Raw query_result:', query_result)
+  console.log('Query result type:', typeof query_result)
+  console.log('Is array:', Array.isArray(query_result))
+
+  for (let i = 0; i < query_result.length; i++) {
+    const item = query_result[i]
+    console.log('Item:', item)
+    console.log(
+      'Month:',
+      item.month,
+      'Day:',
+      item.day,
+      'Average:',
+      item.average,
+    )
+    console.log('Start:', item.start, 'End:', item.end, 'AllDay:', item.allDay)
+
+    if (item.allDay) {
+      const event: Event = {
+        id: `${i}`,
+        title: `${item.average.toFixed(2)}mm`,
+        start: item.start,
+        //allDay: true,
+      }
+    } else {
+      const event: Event = {
+        id: `${i}`,
+        title: `${item.average.toFixed(2)}mm`,
+        start: item.start,
+        end: item.end,
+      }
+    }
+
+    const event: Event = {
+      id: `${i}`,
+      title: `${item.average.toFixed(2)}mm`,
+      start: formatDate(current_view_year, item.month, item.day),
+    }
     calendar?.addEvent(event)
   }
   calendar?.render()
