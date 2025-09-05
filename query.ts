@@ -193,6 +193,7 @@ export function query(input: QueryInput): QueryOutput {
             const district_row = filter(proxy.district, {
               id: parseInt(district_id),
             })
+            console.log('time_id', time_slots[time_index].time_ids[0])
             const district_name = district_row[0].name
             const { start, end } = getEventTimeRange(
               input.view_year,
@@ -243,23 +244,41 @@ function getEventTimeRange(
   minute: number,
   time_mode: '15mins' | '2hrs' | '12hrs' | '24hrs',
 ): { start: string; end: string } {
+  console.log(
+    'year',
+    year,
+    'month',
+    month,
+    'day',
+    day,
+    'hour',
+    hour,
+    'minute',
+    minute,
+    'time_mode',
+    time_mode,
+  )
   // Use Date object, aims to handle time addiction
-  const start = new Date(year, month - 1, day, hour, minute)
+  // toISOString() always return UTC time
+  // use Date.UTC() to create UTC time for calendar
+  const start = new Date(Date.UTC(year, month - 1, day, hour, minute))
   const start_string = start.toISOString().slice(0, 16)
+
+  console.log('start', start_string)
 
   let end
   switch (time_mode) {
     case '15mins':
-      end = new Date(year, month - 1, day, hour, minute + 15)
+      end = new Date(Date.UTC(year, month - 1, day, hour, minute + 15))
       break
     case '2hrs':
-      end = new Date(year, month - 1, day, hour, minute + 120)
+      end = new Date(Date.UTC(year, month - 1, day, hour, minute + 120))
       break
     case '12hrs':
-      end = new Date(year, month - 1, day, hour, minute + 720)
+      end = new Date(Date.UTC(year, month - 1, day, hour, minute + 720))
       break
     case '24hrs':
-      end = new Date(year, month - 1, day + 1, hour, minute)
+      end = new Date(Date.UTC(year, month - 1, day + 1, hour, minute))
       break
     default:
       throw new Error('invalid time mode: ' + time_mode)

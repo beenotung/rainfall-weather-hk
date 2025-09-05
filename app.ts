@@ -157,6 +157,9 @@ function event_creator(query_result: QueryOutput['rainfall_events']) {
     }
     //console.log('Start:', item.start, 'End:', item.end, 'AllDay:', item.allDay)
     calendar?.addEvent(event)
+    if (i === 0) {
+      calendar?.gotoDate(item.start)
+    }
   }
   calendar?.render()
 }
@@ -274,7 +277,7 @@ input.addEventListener('submit', event => {
         //calendar?.render()
         // Handle rainfall data (required)
         if (data.rainfall_events) {
-          calendar?.gotoDate(`${current_view_year}-01-01`)
+          // calendar?.gotoDate(`${current_view_year}-01-01`)
           console.log('Rainfall data:', data.rainfall_events)
           event_creator(data.rainfall_events)
           // event_creator(data.items)
