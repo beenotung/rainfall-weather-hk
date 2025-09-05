@@ -1,9 +1,26 @@
+<!--
+
+1* form container
+
+ - 2* input container
+   - data range container -> left
+   - view range container -> right
+
+ - 1* submit container (include submit and reset button) -> bottom middle
+
+
+-->
+
 <!DOCTYPE html>
 <html lang="en">
-  <title>Rainfall Weather HK</title>
+  <head>
+    <title>Rainfall Weather HK</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
   <body>
     <h2>Rainfall Weather HK</h2>
-    <div id="user_input" class="user_input">
+    <div class="input_container">
       <form id="user_input_form">
         <div id="district_group" class="district_group">
           <label for="district_input">District:</label>
@@ -268,12 +285,6 @@
     </div>
     <div id="calendar">
       <script src="./bundle.js"></script>
-      <style>
-        #calendar {
-          max-width: 1100px;
-          margin: 40px auto;
-        }
-      </style>
     </div>
   </body>
 </html>
