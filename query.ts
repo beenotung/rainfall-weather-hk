@@ -193,7 +193,7 @@ export function query(input: QueryInput): QueryOutput {
             const district_row = filter(proxy.district, {
               id: parseInt(district_id),
             })
-            console.log('time_id', time_slots[time_index].time_ids[0])
+            //console.log('time_id', time_slots[time_index].time_ids[0])
             const district_name = district_row[0].name
             const { start, end } = getEventTimeRange(
               input.view_year,
@@ -244,27 +244,13 @@ function getEventTimeRange(
   minute: number,
   time_mode: '15mins' | '2hrs' | '12hrs' | '24hrs',
 ): { start: string; end: string } {
-  console.log(
-    'year',
-    year,
-    'month',
-    month,
-    'day',
-    day,
-    'hour',
-    hour,
-    'minute',
-    minute,
-    'time_mode',
-    time_mode,
-  )
   // Use Date object, aims to handle time addiction
   // toISOString() always return UTC time
   // use Date.UTC() to create UTC time for calendar
   const start = new Date(Date.UTC(year, month - 1, day, hour, minute))
   const start_string = start.toISOString().slice(0, 16)
 
-  console.log('start', start_string)
+  //console.log('start', start_string)
 
   let end
   switch (time_mode) {
