@@ -20,6 +20,7 @@ async function main() {
     footerToolbar: false, // Hide navigation
     editable: false, // Prevent event editing
     selectable: false,
+    eventOverlap: false,
     events: [],
     headerToolbar: {
       left: 'prev,next',
@@ -222,7 +223,10 @@ input.addEventListener('submit', event => {
 
         // Handle rainfall data (required)
         if (data.rainfall_events) {
-          // calendar?.gotoDate(`${current_view_year}-01-01`)
+          if (data.rainfall_events.length === 0) {
+            alert('No rainfall data found, \nLatest data is 2023-7-31')
+            return
+          }
           console.log('Rainfall data:', data.rainfall_events)
           event_creator(data.rainfall_events)
         }

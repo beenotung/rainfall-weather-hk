@@ -132,6 +132,12 @@ export function query(input: QueryInput): QueryOutput {
   function loop_distrists(district_id: number) {
     for (let date of loop_stats_dates()) {
       // get the data id arrcording to current looping date
+      // problem --> cannot handle date after 2023-7-31(last data in database)
+
+      if (date.year > 2023 || (date.year === 2023 && date.month > 7)) {
+        continue
+      }
+
       const date_id = filter(proxy.date, {
         year: date.year,
         month: date.month,
