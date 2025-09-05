@@ -91,7 +91,7 @@
               <option value="2020">2020</option>
               <option value="2021">2021</option>
               <option value="2022">2022</option>
-              <option value="2023">2023</option>
+              <option value="2023" selected>2023</option>
             </select>
           </div>
 
@@ -195,8 +195,8 @@
 
           <div class="months_selection">
             <label for="select_month"
-              >Select Months For Average Rainfall: (Multiple Choice, empty for
-              all months)</label
+              >Month(s) For Average Rainfall: (Multiple Choice, empty for all
+              months)</label
             >
             <table>
               <tr>
@@ -248,7 +248,7 @@
           <div class="days_Selection">
             <!-- if selected start and end day is same, mean only elsect one day -->
             <label
-              >From:
+              >Day(s) From:
               <input type="number" name="start_day" min="1" max="31" value="1"
             /></label>
             <label
@@ -258,7 +258,7 @@
           </div>
 
           <div class="date_mode_selection">
-            <label for="date_mode">Gregorian Date/Chinese Date: </label>
+            <label for="date_mode">Gregorian/Chinese Date: </label>
 
             <input
               type="radio"
