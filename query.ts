@@ -206,25 +206,18 @@ export function query(input: QueryInput): QueryOutput {
               time_row[0].minute,
               input.time_mode,
             )
-            if (input.time_mode === '24hrs') {
-              events.push({
-                district: district_name,
-                month: parseInt(month),
-                day: parseInt(day),
-                average: average,
-                start: start,
-                allDay: true,
-              })
-            } else {
-              events.push({
-                district: district_name,
-                month: parseInt(month),
-                day: parseInt(day),
-                average: average,
-                start: start,
-                end: end,
-              })
-            }
+
+            events.push({
+              district: district_name,
+              month: parseInt(month),
+              day: parseInt(day),
+              average: average,
+              start: start,
+              // if time mmode = 24hrs, push allDay
+              ...(input.time_mode === '24hrs' && { allDay: true }),
+              // if time mode != 24hrs, push end
+              ...(input.time_mode !== '24hrs' && { end: end }),
+            })
           }
         }
       }
