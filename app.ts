@@ -25,7 +25,7 @@ async function main() {
     headerToolbar: {
       left: 'prev,next',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,multiMonthYear',
+      right: 'multiMonthYear,dayGridMonth,timeGridWeek',
     },
   })
   calendar.render()
@@ -72,22 +72,14 @@ function compareTime(
   return true
 }
 
-//Function to format date to "YYYY-MM-DD" format
-function formatDate(year: number, month: number, day: number) {
-  const mm = String(month).padStart(2, '0')
-  const dd = String(day).padStart(2, '0')
-  console.log(year)
-  return `${year}-${mm}-${dd}`
-}
-
-function event_creator(query_result: QueryOutput['rainfall_events']) {
+function event_creator(query_output: QueryOutput['rainfall_events']) {
   calendar?.removeAllEvents()
-  console.log('Raw query_result:', query_result)
-  console.log('Query result type:', typeof query_result)
-  console.log('Is array:', Array.isArray(query_result))
+  console.log('Raw query_result:', query_output)
+  console.log('Query result type:', typeof query_output)
+  console.log('Is array:', Array.isArray(query_output))
 
-  for (let i = 0; i < query_result.length; i++) {
-    const item = query_result[i]
+  for (let i = 0; i < query_output.length; i++) {
+    const item = query_output[i]
     console.log('Item:', item)
     console.log(
       'Month:',
