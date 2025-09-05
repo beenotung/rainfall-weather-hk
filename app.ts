@@ -2,13 +2,10 @@ import { Calendar, EventInput } from '@fullcalendar/core'
 import multiMonthPlugin from '@fullcalendar/multimonth'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
-//import { Event } from './types'
 import type { QueryInput, QueryOutput } from './api'
 
-let query_result //Pre-declare a variable to store the result of db query
 let calendar: Calendar | null = null
 const input = document.querySelector('#user_input_form') as HTMLFormElement
-let current_view_year = new Date().getFullYear()
 
 async function main() {
   const current_date = new Date()
@@ -20,7 +17,6 @@ async function main() {
     plugins: [dayGridPlugin, timeGridPlugin, multiMonthPlugin],
     initialView: 'dayGridMonth',
     initialDate: init_date,
-    // headerToolbar: false, // Hide navigation
     footerToolbar: false, // Hide navigation
     editable: false, // Prevent event editing
     selectable: false,
@@ -83,51 +79,6 @@ function formatDate(year: number, month: number, day: number) {
   return `${year}-${mm}-${dd}`
 }
 
-//Take the query_result
-/*{
-    month: number,
-    day: number,
-    total: number,
-    count: number,
-    average: number
-  }
-*/
-//And parse it to a event object
-//Then render it
-/*
-function event_creator(query_result: QueryOutput['items']) {
-  //Remove all previous event
-  calendar?.removeAllEvents()
-  console.log('Raw query_result:', query_result)
-  console.log('Query result type:', typeof query_result)
-  console.log('Is array:', Array.isArray(query_result))
-
-  for (let i = 0; i < query_result.length; i++) {
-    const item = query_result[i]
-    /*
-    console.log('Item:', item)
-    console.log(
-      'Month:',
-      item.month,
-      'Day:',
-      item.day,
-      'Average:',
-      item.average,
-    )
-      */
-/*
-    const event: EventInput = {
-      id: `${i}`,
-      title: `${item.average.toFixed(2)}mm`,
-      start: formatDate(current_view_year, item.month, item.day),
-    }
-
-    console.log('Created event:', event)
-    calendar?.addEvent(event)
-  }
-  calendar?.render()
-}
-*/
 function event_creator(query_result: QueryOutput['rainfall_events']) {
   calendar?.removeAllEvents()
   console.log('Raw query_result:', query_result)
@@ -179,8 +130,6 @@ input.addEventListener('submit', event => {
   const view_year = document.querySelector(
     'input[name="view_year"]',
   ) as HTMLInputElement
-
-  current_view_year = +view_year.value
 
   const start_hour = document.querySelector(
     '#start_hour_input',
@@ -271,16 +220,11 @@ input.addEventListener('submit', event => {
       .then((data: QueryOutput) => {
         console.log('Server response:', data)
 
-        //update calender, calender should show date with view year
-        //updateCalender()
-
-        //calendar?.render()
         // Handle rainfall data (required)
         if (data.rainfall_events) {
           // calendar?.gotoDate(`${current_view_year}-01-01`)
           console.log('Rainfall data:', data.rainfall_events)
           event_creator(data.rainfall_events)
-          // event_creator(data.items)
         }
       })
       .catch(error => {

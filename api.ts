@@ -29,18 +29,6 @@ export type QueryInput = {
   time_mode: '15mins' | '2hrs' | '12hrs' | '24hrs'
 }
 
-/*
-export type QueryOutput = {
-  items: {
-    month: number
-    day: number
-    total: number
-    count: number
-    average: number
-  }[]
-}
-  */
-
 export type QueryOutput = {
   // data for average rainfall per slot
   // needs: month, day rainfall mount(no total/count need), start time

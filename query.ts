@@ -3,8 +3,6 @@ import { QueryInput, QueryOutput } from './api'
 import { to_chinese_date } from './date'
 import { proxy } from './proxy'
 import { filter } from 'better-sqlite3-proxy'
-import { timeStamp } from 'console'
-import { s } from 'ts-liveview'
 
 // time mode: 15min | 2hrs | 12 hrs | 24hrs
 // average in every 15mins(every record) |
