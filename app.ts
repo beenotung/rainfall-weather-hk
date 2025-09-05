@@ -138,16 +138,16 @@ input.addEventListener('submit', event => {
   ) as HTMLSelectElement
 
   // Selected range to show
-  const monthes_ele = document.querySelectorAll(
+  const months_ele = document.querySelectorAll(
     'input[name="selected_months"]:checked',
   ) as NodeListOf<HTMLInputElement>
 
   // if no month is selected, select all months
-  let monthes = []
-  if (monthes_ele.length === 0) {
-    monthes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  let months = []
+  if (months_ele.length === 0) {
+    months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   } else {
-    monthes = Array.from(monthes_ele)
+    months = Array.from(months_ele)
       .filter(input => input.checked)
       .map(input => +input.value)
   }
@@ -186,7 +186,7 @@ input.addEventListener('submit', event => {
 
       view_year: +view_year.value,
 
-      monthes: monthes,
+      months: months,
 
       start_day: +start_day.value,
       end_day: +end_day.value,

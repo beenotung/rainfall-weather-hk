@@ -2,7 +2,7 @@ export type QueryInput = {
   // 0 for all, otherwise a specific district id matching the DB
   district_id: number
 
-  // for statitcs
+  // for statics
   start_year: number
   end_year: number
 
@@ -10,7 +10,7 @@ export type QueryInput = {
   view_year: number
 
   // 1 to 12
-  monthes: number[]
+  months: number[]
 
   // 1 to 31
   start_day: number
@@ -31,7 +31,7 @@ export type QueryInput = {
 export type QueryOutput = {
   // data for average rainfall per slot
   // needs: month, day rainfall mount(no total/count need), start time
-  // allDay? if timemode = 24hrs event option allDay = true
+  // allDay? if time_mode = 24hrs event option allDay = true
   rainfall_events: {
     district: string
     month: number

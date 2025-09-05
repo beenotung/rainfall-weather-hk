@@ -26,7 +26,7 @@ type CounterItem = {
 }
 
 // identify what time ids in a time slots
-// arrcoding to select time range and time mode
+// according to select time range and time mode
 type TimeSlot = {
   time_ids: number[]
 }
@@ -36,7 +36,7 @@ export function query(input: QueryInput): QueryOutput {
   function* loop_stats_dates() {
     if (input.date_mode === 'gregorian_date') {
       for (let year = input.start_year; year <= input.end_year; year++) {
-        for (let month of input.monthes) {
+        for (let month of input.months) {
           for (let day = input.start_day; day <= input.end_day; day++) {
             //console.log(year, month, day)
             if (isValidDate(year, month, day)) {
@@ -51,15 +51,15 @@ export function query(input: QueryInput): QueryOutput {
     if (input.date_mode === 'chinese_date') {
       // chinese month -> chinese day -> boolean
       let viewing_chinese_dates: Record<number, Set<number>> = {}
-      for (let month of input.monthes) {
+      for (let month of input.months) {
         for (let day = input.start_day; day <= input.end_day; day++) {
-          let chiense_date = to_chinese_date({
+          let chinese_date = to_chinese_date({
             year: input.view_year,
             month,
             day,
           })
-          viewing_chinese_dates[chiense_date.month] ??= new Set()
-          viewing_chinese_dates[chiense_date.month].add(chiense_date.day)
+          viewing_chinese_dates[chinese_date.month] ??= new Set()
+          viewing_chinese_dates[chinese_date.month].add(chinese_date.day)
         }
       }
 
@@ -129,9 +129,9 @@ export function query(input: QueryInput): QueryOutput {
     return row
   }
 
-  function loop_distrists(district_id: number) {
+  function loop_districts(district_id: number) {
     for (let date of loop_stats_dates()) {
-      // get the data id arrcording to current looping date
+      // get the data id according to current looping date
       // problem --> cannot handle date after 2023-7-31(last data in database)
 
       if (date.year > 2023 || (date.year === 2023 && date.month > 7)) {
@@ -171,17 +171,17 @@ export function query(input: QueryInput): QueryOutput {
   }
 
   if (input.district_id !== 0) {
-    loop_distrists(input.district_id)
+    loop_districts(input.district_id)
   } else {
     for (let district_id = 1; district_id <= 22; district_id++) {
-      loop_distrists(district_id)
+      loop_districts(district_id)
     }
   }
 
   function toQueryOutput(): QueryOutput {
     const events: QueryOutput['rainfall_events'] = []
 
-    // conters -> district_id -> month -> day -> time_index -> total, count
+    // counters -> district_id -> month -> day -> time_index -> total, count
     for (let district_id in counters) {
       for (let month in counters[district_id]) {
         for (let day in counters[district_id][month]) {
@@ -213,7 +213,7 @@ export function query(input: QueryInput): QueryOutput {
               day: parseInt(day),
               average: average,
               start: start,
-              // if time mmode = 24hrs, push allDay
+              // if time mode = 24hrs, push allDay
               ...(input.time_mode === '24hrs' && { allDay: true }),
               // if time mode != 24hrs, push end
               ...(input.time_mode !== '24hrs' && { end: end }),
@@ -297,7 +297,7 @@ function getTimeIdsInRange(
   return time_ids
 }
 
-// split time ids arrcoding to time mode
+// split time ids according to time mode
 // e.g. if time mode is 2 hrs, each object 8 time slots
 function getTimeSlots(
   time_ids: number[],
