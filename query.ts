@@ -1,4 +1,3 @@
-import { dA } from '@fullcalendar/core/internal-common'
 import { QueryInput, QueryOutput } from './api'
 import { to_chinese_date } from './date'
 import { proxy } from './proxy'

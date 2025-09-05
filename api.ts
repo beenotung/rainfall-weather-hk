@@ -25,7 +25,6 @@ export type QueryInput = {
   end_minute: number
 
   date_mode: 'gregorian_date' | 'chinese_date'
-  // not implemented
   time_mode: '15mins' | '2hrs' | '12hrs' | '24hrs'
 }
 
