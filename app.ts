@@ -1,7 +1,9 @@
-import { Calendar } from '@fullcalendar/core'
+import { Calendar, EventInput } from '@fullcalendar/core'
 import multiMonthPlugin from '@fullcalendar/multimonth'
-import { Event } from './types'
-import type { QueryInput, QueryOutput, QueryOutput_time_mode } from './api'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+//import { Event } from './types'
+import type { QueryInput, QueryOutput } from './api'
 
 let query_result //Pre-declare a variable to store the result of db query
 let calendar: Calendar | null = null
@@ -9,22 +11,24 @@ const input = document.querySelector('#user_input_form') as HTMLFormElement
 let current_view_year = new Date().getFullYear()
 
 async function main() {
+  const current_date = new Date()
+  const init_date = current_date.toISOString().slice(0, 10)
   let res = await fetch('/data')
   let json = await res.json()
   const calendarEl = document.getElementById('calendar')
   calendar = new Calendar(calendarEl!, {
-    plugins: [multiMonthPlugin],
-    initialView: 'multiMonthYear',
-    initialDate: `${current_view_year}-01-01`,
+    plugins: [dayGridPlugin, timeGridPlugin, multiMonthPlugin],
+    initialView: 'dayGridMonth',
+    initialDate: init_date,
     // headerToolbar: false, // Hide navigation
     footerToolbar: false, // Hide navigation
     editable: false, // Prevent event editing
     selectable: false,
     events: [],
     headerToolbar: {
-      left: '',
+      left: 'prev,next',
       center: 'title',
-      right: '',
+      right: 'dayGridMonth,timeGridWeek,multiMonthYear',
     },
   })
   calendar.render()
@@ -90,6 +94,7 @@ function formatDate(year: number, month: number, day: number) {
 */
 //And parse it to a event object
 //Then render it
+/*
 function event_creator(query_result: QueryOutput['items']) {
   //Remove all previous event
   calendar?.removeAllEvents()
@@ -110,8 +115,8 @@ function event_creator(query_result: QueryOutput['items']) {
       item.average,
     )
       */
-
-    const event: Event = {
+/*
+    const event: EventInput = {
       id: `${i}`,
       title: `${item.average.toFixed(2)}mm`,
       start: formatDate(current_view_year, item.month, item.day),
@@ -122,10 +127,8 @@ function event_creator(query_result: QueryOutput['items']) {
   }
   calendar?.render()
 }
-
-function new_event_creator(
-  query_result: QueryOutput_time_mode['rainfall_events'],
-) {
+*/
+function event_creator(query_result: QueryOutput['rainfall_events']) {
   calendar?.removeAllEvents()
   console.log('Raw query_result:', query_result)
   console.log('Query result type:', typeof query_result)
@@ -142,64 +145,21 @@ function new_event_creator(
       'Average:',
       item.average,
     )
-    console.log('Start:', item.start, 'End:', item.end, 'AllDay:', item.allDay)
-
-    if (item.allDay) {
-      const event: Event = {
-        id: `${i}`,
-        title: `${item.average.toFixed(2)}mm`,
-        start: item.start,
-        //allDay: true,
-      }
-    } else {
-      const event: Event = {
-        id: `${i}`,
-        title: `${item.average.toFixed(2)}mm`,
-        start: item.start,
-        end: item.end,
-      }
-    }
-
-    const event: Event = {
+    const event: EventInput = {
       id: `${i}`,
-      title: `${item.average.toFixed(2)}mm`,
-      start: formatDate(current_view_year, item.month, item.day),
-    }
-    calendar?.addEvent(event)
-  }
-  calendar?.render()
-}
-/*
-//Function to create events for Chinese calendar data
-function event_creator_chinese(chinese_data : object[]){
-  console.log("Creating Chinese calendar events:", chinese_data)
-  console.log("Chinese data type:", typeof chinese_data)
-  console.log("Is array:", Array.isArray(chinese_data))
+      title: `${item.district} ${item.average.toFixed(2)}mm`,
+      start: item.start,
 
-  for(let i = 0; i < chinese_data.length; i++){
-    const item = chinese_data[i] as any;
-    console.log("Chinese item:", item)
-    
-    // Create event for Chinese calendar data
-    // You can customize this based on your Chinese data structure
-    const event = {
-      id: `chinese_${i}`,
-      title: `🏮 ${item.title || 'Chinese Event'}`, // Adding Chinese emoji for distinction
-      start: item.start || formatDate(item.month, item.day), // Adjust based on your data structure
-      color: '#ff6b6b', // Different color for Chinese events
-      textColor: '#ffffff',
-      extendedProps: {
-        type: 'chinese'
-      }
+      ...(item.end && { end: item.end }),
+
+      // Add allDay flag if available
+      ...(item.allDay !== undefined && { allDay: item.allDay }),
     }
-    
-    console.log("Created Chinese event:", event)
+    //console.log('Start:', item.start, 'End:', item.end, 'AllDay:', item.allDay)
     calendar?.addEvent(event)
   }
   calendar?.render()
-  
 }
-*/
 
 input.addEventListener('submit', event => {
   //Prevent refresh
@@ -313,10 +273,11 @@ input.addEventListener('submit', event => {
 
         //calendar?.render()
         // Handle rainfall data (required)
-        if (data.items) {
+        if (data.rainfall_events) {
           calendar?.gotoDate(`${current_view_year}-01-01`)
-          console.log('Rainfall data:', data.items)
-          event_creator(data.items)
+          console.log('Rainfall data:', data.rainfall_events)
+          event_creator(data.rainfall_events)
+          // event_creator(data.items)
         }
       })
       .catch(error => {

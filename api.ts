@@ -29,6 +29,7 @@ export type QueryInput = {
   time_mode: '15mins' | '2hrs' | '12hrs' | '24hrs'
 }
 
+/*
 export type QueryOutput = {
   items: {
     month: number
@@ -38,12 +39,14 @@ export type QueryOutput = {
     average: number
   }[]
 }
+  */
 
-export type QueryOutput_time_mode = {
+export type QueryOutput = {
   // data for average rainfall per slot
   // needs: month, day rainfall mount(no total/count need), start time
   // allDay? if timemode = 24hrs event option allDay = true
   rainfall_events: {
+    district: string
     month: number
     day: number
     average: number
