@@ -62,3 +62,29 @@ button {
   max-width: 1100px;
   margin: 40px auto;
 }
+
+.strength_bar {
+  display: flex;
+  margin: 10px;
+}
+
+.strength_bar .seg {
+  text-align: center;
+  flex: 1;
+}
+
+.seg.no_rain {
+  background-color: #d9effe;
+}
+.seg.weak {
+  background-color: #4fcff9;
+}
+.seg.moderate {
+  background-color: #56f959;
+}
+.seg.strong {
+  background-color: #ded855;
+}
+.seg.extreme {
+  background-color: #e9994c;
+}

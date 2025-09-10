@@ -202,7 +202,19 @@ export function query(input: QueryInput): QueryOutput {
               time_row[0].minute,
               input.time_mode,
             )
-            const strength = getStrength(average)
+            // strength = getStrength(average)
+            let strength: 0 | 1 | 2 | 3 | 4
+            if (average === 0) {
+              strength = 0
+            } else if (average < 1.25) {
+              strength = 1
+            } else if (average < 2.5) {
+              strength = 2
+            } else if (average < 5) {
+              strength = 3
+            } else {
+              strength = 4
+            }
 
             events.push({
               district: district_name,
@@ -345,12 +357,4 @@ function isValidDate(year: number, month: number, day: number): boolean {
     date.getMonth() === month - 1 &&
     date.getDate() === day
   )
-}
-
-function getStrength(average: number): 0 | 1 | 2 | 3 | 4 {
-  if (average === 0) return 0
-  else if (average < 1.25) return 1
-  else if (average < 2.5) return 2
-  else if (average < 5) return 3
-  else return 4
 }

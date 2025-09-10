@@ -93,9 +93,11 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
   console.log('Raw query_result:', query_output)
   console.log('Query result type:', typeof query_output)
   console.log('Is array:', Array.isArray(query_output))
+  console.log('Query output length:', query_output.length)
 
   for (let i = 0; i < query_output.length; i++) {
     const item = query_output[i]
+    /*
     console.log('Item:', item)
     console.log(
       'Month:',
@@ -105,8 +107,7 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
       'Average:',
       item.average,
     )
-    const bgColor = getBgColor(item.strength)
-    console.log('BgColor:', bgColor)
+      */
 
     const event: EventInput = {
       id: `${i}`,
@@ -117,7 +118,7 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
 
       // Add allDay flag if available
       ...(item.allDay !== undefined && { allDay: item.allDay }),
-      color: bgColor,
+      color: getBgColor(item.strength),
     }
     //console.log('Start:', item.start, 'End:', item.end, 'AllDay:', item.allDay)
     calendar?.addEvent(event)
@@ -245,6 +246,7 @@ input.addEventListener('submit', event => {
       .then(response => response.json())
       .then((data: QueryOutput) => {
         console.log('Server response:', data)
+        console.log('Received data at:' + new Date())
 
         // Handle rainfall data (required)
         if (data.rainfall_events) {
@@ -254,6 +256,7 @@ input.addEventListener('submit', event => {
           }
           console.log('Rainfall data:', data.rainfall_events)
           event_creator(data.rainfall_events)
+          console.log('Event created at:' + new Date())
         }
       })
       .catch(error => {

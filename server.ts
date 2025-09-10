@@ -21,8 +21,10 @@ app.listen(port, () => {
 app.post('/query', async (req, res) => {
   try {
     let input = req.body
+    console.log('Received input at:' + new Date())
     console.log(input)
     let output = query(input)
+    console.log('Query output at:' + new Date())
     //console.log(output)
     res.json(output)
   } catch (error) {
