@@ -21,6 +21,7 @@ async function main() {
     editable: false, // Prevent event editing
     selectable: false,
     eventOverlap: false,
+    eventTextColor: '#000000',
     events: [],
     headerToolbar: {
       left: 'prev,next',
@@ -72,6 +73,21 @@ function compareTime(
   return true
 }
 
+function getBgColor(strength: 0 | 1 | 2 | 3 | 4): string {
+  switch (strength) {
+    case 0:
+      return '#d9effe'
+    case 1:
+      return '#4fcff9'
+    case 2:
+      return '#56f959'
+    case 3:
+      return '#ded855'
+    case 4:
+      return '#e9994c'
+  }
+}
+
 function event_creator(query_output: QueryOutput['rainfall_events']) {
   calendar?.removeAllEvents()
   console.log('Raw query_result:', query_output)
@@ -89,15 +105,19 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
       'Average:',
       item.average,
     )
+    const bgColor = getBgColor(item.strength)
+    console.log('BgColor:', bgColor)
+
     const event: EventInput = {
       id: `${i}`,
-      title: `${item.district} ${item.average.toFixed(2)}mm`,
+      title: `${item.average.toFixed(2)}mm ${item.district} `,
       start: item.start,
 
       ...(item.end && { end: item.end }),
 
       // Add allDay flag if available
       ...(item.allDay !== undefined && { allDay: item.allDay }),
+      color: bgColor,
     }
     //console.log('Start:', item.start, 'End:', item.end, 'AllDay:', item.allDay)
     calendar?.addEvent(event)
@@ -113,9 +133,22 @@ input.addEventListener('submit', event => {
   event?.preventDefault()
 
   // Rain fall data range
-  const district = document.querySelector(
-    '#district_input',
-  ) as HTMLSelectElement
+
+  const districts_ele = document.querySelectorAll(
+    'input[name="selected_districts"]:checked',
+  ) as NodeListOf<HTMLInputElement>
+
+  let districts = []
+  if (districts_ele.length === 0) {
+    districts = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+      22,
+    ]
+  } else {
+    districts = Array.from(districts_ele)
+      .filter(input => input.checked)
+      .map(input => +input.value)
+  }
 
   const start_year = document.querySelector('#start_year') as HTMLSelectElement
   const end_year = document.querySelector('#end_year') as HTMLSelectElement
@@ -179,7 +212,7 @@ input.addEventListener('submit', event => {
     compareDayRange(+start_day.value, +end_day.value)
   ) {
     const input: QueryInput = {
-      district_id: +district.value,
+      district_id: districts,
 
       start_year: +start_year.value,
       end_year: +end_year.value,

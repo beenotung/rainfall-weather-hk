@@ -156,7 +156,7 @@ export function query(input: QueryInput): QueryOutput {
 
         for (let time_id of slot.time_ids) {
           //console.log(date_id, time_id, input.district_id)
-          const row = search(input.district_id, date_id, time_id)
+          const row = search(district_id, date_id, time_id)
           if (row.length === 0) {
             continue
           } else {
@@ -170,12 +170,8 @@ export function query(input: QueryInput): QueryOutput {
     }
   }
 
-  if (input.district_id !== 0) {
-    loop_districts(input.district_id)
-  } else {
-    for (let district_id = 1; district_id <= 22; district_id++) {
-      loop_districts(district_id)
-    }
+  for (const district_id of input.district_id) {
+    loop_districts(district_id)
   }
 
   function toQueryOutput(): QueryOutput {
@@ -206,12 +202,14 @@ export function query(input: QueryInput): QueryOutput {
               time_row[0].minute,
               input.time_mode,
             )
+            const strength = getStrength(average)
 
             events.push({
               district: district_name,
               month: parseInt(month),
               day: parseInt(day),
               average: average,
+              strength: strength,
               start: start,
               // if time mode = 24hrs, push allDay
               ...(input.time_mode === '24hrs' && { allDay: true }),
@@ -290,7 +288,9 @@ function getTimeIdsInRange(
   }
 
   const time_ids: number[] = []
-  for (let id = start_time_id; id <= end_time_id; id++) {
+  // not include end_time_id
+  // i.e. start: 16:00, end 18:00, return [id between 16:00 and 17:45]
+  for (let id = start_time_id; id < end_time_id; id++) {
     time_ids.push(id)
   }
 
@@ -345,4 +345,12 @@ function isValidDate(year: number, month: number, day: number): boolean {
     date.getMonth() === month - 1 &&
     date.getDate() === day
   )
+}
+
+function getStrength(average: number): 0 | 1 | 2 | 3 | 4 {
+  if (average === 0) return 0
+  else if (average < 1.25) return 1
+  else if (average < 2.5) return 2
+  else if (average < 5) return 3
+  else return 4
 }

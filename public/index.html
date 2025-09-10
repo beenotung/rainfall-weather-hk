@@ -13,32 +13,109 @@
         <div class="left_container">
           <h3>Data Range</h3>
           <div class="district_selection">
-            <label for="district_input">District:</label>
-            <select id="district_input" name="district_input" type="hidden">
-              <option value="0" selected>所有</option>
-              <option value="1">中西區</option>
-              <option value="2">東區</option>
-              <option value="3">離島區</option>
-              <option value="4">九龍城</option>
-              <option value="5">觀塘</option>
-              <option value="6">葵青</option>
-              <option value="7">北區</option>
-              <option value="8">西貢</option>
-              <option value="9">沙田</option>
-              <option value="10">深水埗</option>
-              <option value="11">南區</option>
-              <option value="12">大埔</option>
-              <option value="13">荃灣</option>
-              <option value="14">屯門</option>
-              <option value="15">灣仔</option>
-              <option value="16">黃大仙</option>
-              <option value="17">油尖旺</option>
-              <option value="18">元朗</option>
-              <option value="19">大嶼山</option>
-              <option value="20">南丫島</option>
-              <option value="21">九龍西</option>
-              <option value="22">九龍東</option>
-            </select>
+            <label for="district_input"
+              >District(s): (Multiple Choice, empty for all districts)</label
+            >
+            <table>
+              <tr>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="1" />
+                  中西區
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="2" />
+                  東區
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="3" />
+                  離島區
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="4" />
+                  九龍城
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="5" />
+                  觀塘
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="6" />
+                  葵青
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="7" />
+                  北區
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="8" />
+                  西貢
+                </td>
+
+                <td>
+                  <input type="checkbox" name="selected_districts" value="9" />
+                  沙田
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="10" />
+                  深水埗
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="11" />
+                  南區
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="12" />
+                  大埔
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="13" />
+                  荃灣
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="14" />
+                  屯門
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="15" />
+                  灣仔
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="16" />
+                  黃大仙
+                </td>
+
+                <td>
+                  <input type="checkbox" name="selected_districts" value="17" />
+                  油尖旺
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="18" />
+                  元朗
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="19" />
+                  大嶼山
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="20" />
+                  南丫島
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="21" />
+                  九龍西
+                </td>
+                <td>
+                  <input type="checkbox" name="selected_districts" value="22" />
+                  九龍東
+                </td>
+              </tr>
+            </table>
           </div>
 
           <div class="start_year_selection">
@@ -169,16 +246,6 @@
               <option value="45" selected>45</option>
             </select>
           </div>
-
-          <div class="time_mode_selection">
-            <label for="time_mode_input">Time Mode:</label>
-            <select id="time_mode_input" name="time_mode_input">
-              <option value="15mins">15mins</option>
-              <option value="2hrs">2hrs</option>
-              <option value="12hrs">12hrs</option>
-              <option value="24hrs" selected>24hrs</option>
-            </select>
-          </div>
         </div>
         <div class="right_container">
           <h3>View Range</h3>
@@ -276,6 +343,15 @@
               value="chinese_date"
             />
             <label for="chinese_date">Chinese Date</label>
+          </div>
+          <div class="time_mode_selection">
+            <label for="time_mode_input">Time Mode:</label>
+            <select id="time_mode_input" name="time_mode_input">
+              <option value="15mins">15mins</option>
+              <option value="2hrs">2hrs</option>
+              <option value="12hrs">12hrs</option>
+              <option value="24hrs" selected>24hrs</option>
+            </select>
           </div>
         </div>
 

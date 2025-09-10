@@ -1,6 +1,6 @@
 export type QueryInput = {
   // 0 for all, otherwise a specific district id matching the DB
-  district_id: number
+  district_id: number[]
 
   // for statics
   start_year: number
@@ -37,6 +37,8 @@ export type QueryOutput = {
     month: number
     day: number
     average: number
+    // 0: no rain, 1: weak, 2: moderate, 3: strong, 4: extreme
+    strength: 0 | 1 | 2 | 3 | 4
     start: string // if time mode = 24hrs, start is not needed
     end?: string // if time mode = 24hrs, end is not needed
     allDay?: boolean // if time mode = 24hrs, allDay is true
