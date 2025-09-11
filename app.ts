@@ -6,6 +6,10 @@ import type { QueryInput, QueryOutput } from './api'
 
 let calendar: Calendar | null = null
 const input = document.querySelector('#user_input_form') as HTMLFormElement
+// loading spinner for waiting data from server
+let isLoading = false
+// processing spinner for creating rainfall events
+let isCreating = false
 
 async function main() {
   const current_date = new Date()
@@ -22,6 +26,7 @@ async function main() {
     selectable: false,
     eventOverlap: false,
     eventTextColor: '#000000',
+    eventDisplay: 'block',
     events: [],
     headerToolbar: {
       left: 'prev,next',
@@ -73,6 +78,38 @@ function compareTime(
   return true
 }
 
+// show loading spinner
+// disable submit button
+function showLoading() {
+  isLoading = true
+  const loading_container = document.getElementById('loading_container')
+  const form = document.getElementById('user_input_form') as HTMLFormElement
+
+  if (loading_container) {
+    loading_container.style.display = 'flex'
+  }
+
+  if (form) {
+    form.style.display = 'none'
+  }
+}
+
+// hide loading spinner
+// enable submit button -> allow submit again
+function hideLoading() {
+  isLoading = false
+  const loading_container = document.getElementById('loading_container')
+  const form = document.getElementById('user_input_form') as HTMLFormElement
+
+  if (loading_container) {
+    loading_container.style.display = 'none'
+  }
+
+  if (form) {
+    form.style.display = 'grid'
+  }
+}
+
 function getBgColor(strength: 0 | 1 | 2 | 3 | 4): string {
   switch (strength) {
     case 0:
@@ -95,7 +132,10 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
   console.log('Is array:', Array.isArray(query_output))
   console.log('Query output length:', query_output.length)
 
-  for (let i = 0; i < query_output.length; i++) {
+  const total_events = query_output.length
+  let current_event = 0
+
+  for (let i = 0; i < total_events; i++) {
     const item = query_output[i]
     /*
     console.log('Item:', item)
@@ -125,6 +165,15 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
     if (i === 0) {
       calendar?.gotoDate(item.start)
     }
+    current_event++
+    if (i % 10 === 0 || i === total_events - 1) {
+      const progress = (current_event / total_events) * 100
+      console.log(
+        `Processing events: ${current_event}/${total_events} (${progress.toFixed(
+          1,
+        )}%)`,
+      )
+    }
   }
   calendar?.render()
 }
@@ -134,6 +183,9 @@ input.addEventListener('submit', event => {
   event?.preventDefault()
 
   // Rain fall data range
+  if (isLoading || isCreating) {
+    return
+  }
 
   const districts_ele = document.querySelectorAll(
     'input[name="selected_districts"]:checked',
@@ -236,6 +288,8 @@ input.addEventListener('submit', event => {
       time_mode: time_mode.value as '15mins' | '2hrs' | '12hrs' | '24hrs',
     }
 
+    showLoading()
+
     fetch('query', {
       method: 'POST',
       headers: {
@@ -252,15 +306,19 @@ input.addEventListener('submit', event => {
         if (data.rainfall_events) {
           if (data.rainfall_events.length === 0) {
             alert('No rainfall data found, \nLatest data is 2023-7-31')
+            hideLoading()
             return
           }
           console.log('Rainfall data:', data.rainfall_events)
           event_creator(data.rainfall_events)
           console.log('Event created at:' + new Date())
+          hideLoading()
         }
       })
       .catch(error => {
         console.error('Error fetching data:', error)
+        hideLoading()
+        alert('Error fetching data, please try again')
       })
   }
 })

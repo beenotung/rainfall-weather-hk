@@ -55,7 +55,10 @@ button {
 .submit_container {
   grid-column: 1 / 3; /* Spans both columns */
   grid-row: 2;
+  display: flex;
   justify-self: center; /* Centers the button */
+  align-items: center;
+  gap: 10px;
 }
 
 #calendar {
@@ -65,19 +68,20 @@ button {
 
 .strength_bar {
   display: flex;
-
-  /*font: 12px/1.2 sans-serif;*/
   border: 1px solid #000000;
   border-radius: 20px;
   overflow: hidden;
   text-align: center;
   margin: 10px;
   height: 20px;
+  width: 35%;
+  height: 25px;
 }
 
 .strength_bar .seg {
   text-align: center;
   flex: 1;
+  padding: 5px;
 }
 
 .seg.no_rain {
@@ -94,4 +98,43 @@ button {
 }
 .seg.extreme {
   background-color: #e9994c;
+}
+
+/* processing bar for loading data and creating events*/
+.loading_container {
+  grid-column: 1 / 3; /* Spans both columns */
+  grid-row: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  border: 2px solid #e9ecef;
+}
+
+.loading_spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading_text {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

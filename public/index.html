@@ -353,15 +353,6 @@
               <option value="24hrs" selected>24hrs</option>
             </select>
           </div>
-          <label for="strength_bar">Rainfall Strength Bar: </label>
-          <!-- show each color represent the strength -->
-          <div class="strength_bar">
-            <div class="seg no_rain">No Rain</div>
-            <div class="seg weak">Weak</div>
-            <div class="seg moderate">Moderate</div>
-            <div class="seg strong">Strong</div>
-            <div class="seg extreme">Extreme</div>
-          </div>
         </div>
 
         <div class="submit_container">
@@ -369,6 +360,23 @@
           <button id="reset_button" type="reset">Reset</button>
         </div>
       </form>
+      <div
+        class="loading_container"
+        id="loading_container"
+        style="display: none"
+      >
+        <div class="loading_spinner"></div>
+        <div class="loading_text">Loading data...</div>
+      </div>
+    </div>
+    <label for="strength_bar">Rainfall Strength Bar: </label>
+    <!-- show each color represent the strength -->
+    <div class="strength_bar">
+      <div class="seg no_rain">No Rain</div>
+      <div class="seg weak">Weak</div>
+      <div class="seg moderate">Moderate</div>
+      <div class="seg strong">Strong</div>
+      <div class="seg extreme">Extreme</div>
     </div>
     <div id="calendar">
       <script src="./bundle.js"></script>
