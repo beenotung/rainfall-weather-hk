@@ -302,10 +302,15 @@ function getTimeIdsInRange(
   const time_ids: number[] = []
   // not include end_time_id
   // i.e. start: 16:00, end 18:00, return [id between 16:00 and 17:45]
+  // i.e. include start and exclude end
   for (let id = start_time_id; id < end_time_id; id++) {
     time_ids.push(id)
   }
 
+  // include last data for a day if end_hour is 23 and end_minute is 45
+  if (end_hour === 23 && end_minute === 45) {
+    time_ids.push(end_time_id)
+  }
   return time_ids
 }
 
