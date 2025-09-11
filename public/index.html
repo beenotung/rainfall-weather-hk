@@ -240,7 +240,7 @@
               <option value="45" selected>45</option>
             </select>
           </div>
-
+        </div>
         <div class="right_container">
           <h3>View Range</h3>
           <div class="view_year_selection">
@@ -362,16 +362,19 @@
         <div class="loading_spinner"></div>
         <div class="loading_text">Loading data...</div>
       </div>
+      <div class="strength_bar_container">
+        <label for="strength_bar">Rainfall Strength Bar: </label>
+        <!-- show each color represent the strength -->
+        <div class="strength_bar">
+          <div class="seg no_rain">No Rain</div>
+          <div class="seg weak">Weak</div>
+          <div class="seg moderate">Moderate</div>
+          <div class="seg strong">Strong</div>
+          <div class="seg extreme">Extreme</div>
+        </div>
+      </div>
     </div>
-    <label for="strength_bar">Rainfall Strength Bar: </label>
-    <!-- show each color represent the strength -->
-    <div class="strength_bar">
-      <div class="seg no_rain">No Rain</div>
-      <div class="seg weak">Weak</div>
-      <div class="seg moderate">Moderate</div>
-      <div class="seg strong">Strong</div>
-      <div class="seg extreme">Extreme</div>
-    </div>
+
     <div id="calendar">
       <script src="./bundle.js"></script>
     </div>
