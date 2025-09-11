@@ -65,7 +65,14 @@ button {
 
 .strength_bar {
   display: flex;
+
+  /*font: 12px/1.2 sans-serif;*/
+  border: 1px solid #000000;
+  border-radius: 20px;
+  overflow: hidden;
+  text-align: center;
   margin: 10px;
+  height: 20px;
 }
 
 .strength_bar .seg {
