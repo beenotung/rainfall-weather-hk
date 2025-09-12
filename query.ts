@@ -47,15 +47,10 @@ type TimeSlot = {
   time_ids: number[]
 }
 
-// problems: in chinese date, every Feb have 29 days
-// but, date in gregorian, not every Feb have 29 days
-// -> overlap problem in 02-29 and 03-01 (Date object date time calculation)
-// try convert chinese date back to gregorian date in view year while sending query result
-// -> try to send extra information about what chinese date at event start date
 export function query(input: QueryInput): QueryOutput {
   let counters: Counters = {}
-  // needed chinese dates in view year
-  // use to get chinese date and convert back to gregorian date
+  // needed chinese dates in view year if in chinese date mode
+  // use to get chinese date data and convert back to gregorian date
   let view_chinese_dates: ViewChineseDates = {}
 
   // get date needs to be calculated
@@ -183,9 +178,6 @@ export function query(input: QueryInput): QueryOutput {
       })[0].id!
 
       let time_index = 0
-      // need a fact check for is 02/29 exist in view year
-      // if yes, go ahead
-      // if no, skip or add data into 03/01
       for (let slot of time_slots) {
         const counter_item = get_counter(
           district_id,
@@ -255,7 +247,7 @@ export function query(input: QueryInput): QueryOutput {
               time_row[0].minute,
               input.time_mode,
             )
-            // strength = getStrength(average)
+
             let strength: 0 | 1 | 2 | 3 | 4
             if (average === 0) {
               strength = 0
@@ -275,9 +267,6 @@ export function query(input: QueryInput): QueryOutput {
                 month: parseInt(month),
                 day: parseInt(day),
               }),
-              //...(input.date_mode === 'chinese_date' && { day: parseInt(day) }),
-              //month: parseInt(month),
-              //day: parseInt(day),
               average: average,
               strength: strength,
               start: start,
