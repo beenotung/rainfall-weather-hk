@@ -311,10 +311,21 @@ function getEventTimeRange(
       end = new Date(Date.UTC(year, month - 1, day, hour, minute + 15))
       break
     case '2hrs':
-      end = new Date(Date.UTC(year, month - 1, day, hour, minute + 120))
+      // avoid overlap with next day
+      if (hour + 2 >= 24) {
+        end = new Date(Date.UTC(year, month - 1, day, 23, 59))
+      } else {
+        end = new Date(Date.UTC(year, month - 1, day, hour + 2, minute))
+      }
       break
+
     case '12hrs':
-      end = new Date(Date.UTC(year, month - 1, day, hour, minute + 720))
+      // avoid overlap with next day
+      if (hour + 12 >= 24) {
+        end = new Date(Date.UTC(year, month - 1, day, 23, 59))
+      } else {
+        end = new Date(Date.UTC(year, month - 1, day, hour + 12, minute))
+      }
       break
     case '24hrs':
       end = new Date(Date.UTC(year, month - 1, day + 1, hour, minute))
