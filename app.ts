@@ -28,6 +28,7 @@ async function main() {
     eventTextColor: '#000000',
     eventDisplay: 'block',
     displayEventTime: false,
+    eventOrder: 'start, priority',
     events: [],
     headerToolbar: {
       left: 'prev,next',
@@ -126,6 +127,57 @@ function getBgColor(strength: 0 | 1 | 2 | 3 | 4): string {
   }
 }
 
+function getPriority(district: string): number {
+  switch (district) {
+    case '中西區':
+      return 1
+    case '東區':
+      return 2
+    case '離島區':
+      return 3
+    case '九龍城':
+      return 4
+    case '觀塘':
+      return 5
+    case '葵青':
+      return 6
+    case '北區':
+      return 7
+    case '西貢':
+      return 8
+    case '沙田':
+      return 9
+    case '深水埗':
+      return 10
+    case '南區':
+      return 11
+    case '大埔':
+      return 12
+    case '荃灣':
+      return 13
+    case '屯門':
+      return 14
+    case '灣仔':
+      return 15
+    case '黃大仙':
+      return 16
+    case '油尖旺':
+      return 17
+    case '元朗':
+      return 18
+    case '大嶼山':
+      return 19
+    case '南丫島':
+      return 20
+    case '九龍西':
+      return 21
+    case '九龍東':
+      return 22
+    default:
+      return 0
+  }
+}
+
 function event_creator(query_output: QueryOutput['rainfall_events']) {
   calendar?.removeAllEvents()
   console.log('Raw query_result:', query_output)
@@ -170,6 +222,9 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
             start: item.start.split('T')[0],
             allDay: true,
             color: '#fc5d6d',
+            extendedProps: {
+              priority: -1,
+            },
           }
           calendar?.addEvent(chinese_date_event)
         }
@@ -193,6 +248,9 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
       // Add allDay flag if available
       ...(item.allDay !== undefined && { allDay: item.allDay }),
       color: getBgColor(item.strength),
+      extendedProps: {
+        priority: getPriority(item.district),
+      },
     }
     //console.log('Start:', item.start, 'End:', item.end, 'AllDay:', item.allDay)
     calendar?.addEvent(event)
