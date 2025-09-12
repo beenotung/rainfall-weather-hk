@@ -315,6 +315,19 @@ input.addEventListener('submit', event => {
     '#end_minute_input',
   ) as HTMLSelectElement
 
+  let end_hour_value = +end_hour.value
+  let end_minute_value = +end_minute.value
+
+  if (+end_hour.value === 24) {
+    if (+end_minute.value !== 0) {
+      alert('Maximum time selection is 24:00')
+      return
+    } else {
+      end_hour_value = 23
+      end_minute_value = 45
+    }
+  }
+
   // Selected range to show
   const months_ele = document.querySelectorAll(
     'input[name="selected_months"]:checked',
@@ -370,10 +383,10 @@ input.addEventListener('submit', event => {
       end_day: +end_day.value,
 
       start_hour: +start_hour.value,
-      end_hour: +end_hour.value,
+      end_hour: end_hour_value,
 
       start_minute: +start_minute.value,
-      end_minute: +end_minute.value,
+      end_minute: end_minute_value,
 
       date_mode: date_mode.value as 'gregorian_date' | 'chinese_date',
 
