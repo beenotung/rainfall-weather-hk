@@ -27,6 +27,7 @@ async function main() {
     eventOverlap: false,
     eventTextColor: '#000000',
     eventDisplay: 'block',
+    displayEventTime: false,
     events: [],
     headerToolbar: {
       left: 'prev,next',
@@ -147,11 +148,18 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
       'Average:',
       item.average,
     )
-      */
-
+    */
+    // get start hour
+    const start_time = item.start.split('T')[1]
+    let title: string
+    if (item.allDay) {
+      title = `${item.average.toFixed(2)}mm ${item.district}`
+    } else {
+      title = `${start_time} ${item.average.toFixed(2)}mm ${item.district}`
+    }
     const event: EventInput = {
       id: `${i}`,
-      title: `${item.average.toFixed(2)}mm ${item.district} `,
+      title: title,
       start: item.start,
 
       ...(item.end && { end: item.end }),

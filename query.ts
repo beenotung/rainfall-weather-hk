@@ -53,6 +53,7 @@ export function query(input: QueryInput): QueryOutput {
       let viewing_chinese_dates: Record<number, Set<number>> = {}
       for (let month of input.months) {
         for (let day = input.start_day; day <= input.end_day; day++) {
+          // get chinese date in view year
           let chinese_date = to_chinese_date({
             year: input.view_year,
             month,
@@ -145,7 +146,26 @@ export function query(input: QueryInput): QueryOutput {
       })[0].id!
 
       let time_index = 0
+      // need a fact check for is 02/29 exist in view year
+      // if yes, go ahead
+      // if no, skip or add data into 03/01
       for (let slot of time_slots) {
+        let counter_item
+        if (isValidDate(input.view_year, date.month, date.day)) {
+          counter_item = get_counter(
+            district_id,
+            date.year,
+            date.month,
+            date.day,
+            time_index,
+          )
+          // if date is not valid, but month is 2 and day is 29, then add data into 03/01
+        } else if (date.month === 2 && date.day === 29) {
+          counter_item = get_counter(district_id, date.year, 3, 1, time_index)
+        } else {
+          continue
+        }
+        /*
         let counter_item = get_counter(
           district_id,
           date.year,
@@ -153,7 +173,7 @@ export function query(input: QueryInput): QueryOutput {
           date.day,
           time_index,
         )
-
+          */
         for (let time_id of slot.time_ids) {
           //console.log(date_id, time_id, input.district_id)
           const row = search(district_id, date_id, time_id)
@@ -308,7 +328,13 @@ function getTimeIdsInRange(
   }
 
   // include last data for a day if end_hour is 23 and end_minute is 45
-  if (end_hour === 23 && end_minute === 45) {
+  // avoid double include if only 23:45 is selected
+  if (
+    end_hour === 23 &&
+    end_minute === 45 &&
+    start_hour !== end_hour &&
+    start_minute !== end_minute
+  ) {
     time_ids.push(end_time_id)
   }
   return time_ids
