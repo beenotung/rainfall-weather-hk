@@ -138,6 +138,8 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
   // set default value to -1 (not valid month and day)
   let current_month: number = -1
   let current_day: number = -1
+  let printed_chinese_date = false
+  let current_district = query_output[0].district
   for (let i = 0; i < total_events; i++) {
     const item = query_output[i]
     /*
@@ -151,19 +153,26 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
       item.average,
     )
     */
-    // get start hour
-    if (item.month && item.day) {
-      if (current_month !== item.month || current_day !== item.day) {
-        current_month = item.month
-        current_day = item.day
-        const chinese_date_event: EventInput = {
-          id: `${current_month}-${current_day}`,
-          title: `Chinese Date: ${current_month}-${current_day}`,
-          start: item.start.split('T')[0],
-          allDay: true,
-          color: '#fc5d6d',
+
+    // only need to print chinese date once for all districts
+    if (current_district !== item.district) {
+      printed_chinese_date = true
+    }
+
+    if (!printed_chinese_date) {
+      if (item.month && item.day) {
+        if (current_month !== item.month || current_day !== item.day) {
+          current_month = item.month
+          current_day = item.day
+          const chinese_date_event: EventInput = {
+            id: `${current_month}-${current_day}`,
+            title: `Chinese Date: ${current_month}-${current_day}`,
+            start: item.start.split('T')[0],
+            allDay: true,
+            color: '#fc5d6d',
+          }
+          calendar?.addEvent(chinese_date_event)
         }
-        calendar?.addEvent(chinese_date_event)
       }
     }
 
