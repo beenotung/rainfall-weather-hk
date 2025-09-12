@@ -135,7 +135,9 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
 
   const total_events = query_output.length
   let current_event = 0
-
+  // set default value to -1 (not valid month and day)
+  let current_month: number = -1
+  let current_day: number = -1
   for (let i = 0; i < total_events; i++) {
     const item = query_output[i]
     /*
@@ -150,6 +152,21 @@ function event_creator(query_output: QueryOutput['rainfall_events']) {
     )
     */
     // get start hour
+    if (item.month && item.day) {
+      if (current_month !== item.month || current_day !== item.day) {
+        current_month = item.month
+        current_day = item.day
+        const chinese_date_event: EventInput = {
+          id: `${current_month}-${current_day}`,
+          title: `Chinese Date: ${current_month}-${current_day}`,
+          start: item.start.split('T')[0],
+          allDay: true,
+          color: '#fc5d6d',
+        }
+        calendar?.addEvent(chinese_date_event)
+      }
+    }
+
     const start_time = item.start.split('T')[1]
     let title: string
     if (item.allDay) {

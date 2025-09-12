@@ -34,8 +34,10 @@ export type QueryOutput = {
   // allDay? if time_mode = 24hrs event option allDay = true
   rainfall_events: {
     district: string
-    month: number
-    day: number
+    // if is gregorian date, month and day not needed
+    // i.e. date in start date
+    month?: number
+    day?: number
     average: number
     // 0: no rain, 1: weak, 2: moderate, 3: strong, 4: extreme
     strength: 0 | 1 | 2 | 3 | 4

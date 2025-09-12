@@ -1,5 +1,5 @@
 import { QueryInput, QueryOutput } from './api'
-import { to_chinese_date } from './date'
+import { to_chinese_date, to_gregorian_date } from './date'
 import { proxy } from './proxy'
 import { filter } from 'better-sqlite3-proxy'
 
@@ -25,13 +25,39 @@ type CounterItem = {
   count: number
 }
 
+// chinese date object, aims to store chinese date information if date mode is chinese_date
+type ChineseDate = {
+  cycle: number
+  year: number
+  month: number
+  leap: number
+  day: number
+}
+
+// a type to fit chinese dates in view year
+type ViewChineseDates = {
+  [month: number]: {
+    [day: number]: ChineseDate
+  }
+}
+
 // identify what time ids in a time slots
 // according to select time range and time mode
 type TimeSlot = {
   time_ids: number[]
 }
 
+// problems: in chinese date, every Feb have 29 days
+// but, date in gregorian, not every Feb have 29 days
+// -> overlap problem in 02-29 and 03-01 (Date object date time calculation)
+// try convert chinese date back to gregorian date in view year while sending query result
+// -> try to send extra information about what chinese date at event start date
 export function query(input: QueryInput): QueryOutput {
+  let counters: Counters = {}
+  // needed chinese dates in view year
+  // use to get chinese date and convert back to gregorian date
+  let view_chinese_dates: ViewChineseDates = {}
+
   // get date needs to be calculated
   function* loop_stats_dates() {
     if (input.date_mode === 'gregorian_date') {
@@ -40,7 +66,9 @@ export function query(input: QueryInput): QueryOutput {
           for (let day = input.start_day; day <= input.end_day; day++) {
             //console.log(year, month, day)
             if (isValidDate(year, month, day)) {
-              yield { year, month, day }
+              if (isValidDate(input.view_year, month, day)) {
+                yield { year, month, day }
+              }
             }
           }
         }
@@ -53,26 +81,36 @@ export function query(input: QueryInput): QueryOutput {
       let viewing_chinese_dates: Record<number, Set<number>> = {}
       for (let month of input.months) {
         for (let day = input.start_day; day <= input.end_day; day++) {
-          // get chinese date in view year
-          let chinese_date = to_chinese_date({
-            year: input.view_year,
-            month,
-            day,
-          })
-          viewing_chinese_dates[chinese_date.month] ??= new Set()
-          viewing_chinese_dates[chinese_date.month].add(chinese_date.day)
+          // get chinese date (month, day) in view year
+          //console.log(input.view_year, month, day)
+          if (isValidDate(input.view_year, month, day)) {
+            let chinese_date = to_chinese_date({
+              year: input.view_year,
+              month,
+              day,
+            })
+            // store chinese date in view year
+            view_chinese_dates[chinese_date.month] ??= {}
+            view_chinese_dates[chinese_date.month][chinese_date.day] =
+              chinese_date
+
+            viewing_chinese_dates[chinese_date.month] ??= new Set()
+            viewing_chinese_dates[chinese_date.month].add(chinese_date.day)
+          }
         }
       }
 
       for (let year = input.start_year; year <= input.end_year; year++) {
         for (let month = 1; month <= 12; month++) {
           for (let day = 1; day <= 31; day++) {
-            let chinese_date = to_chinese_date({ year, month, day })
-            if (
-              viewing_chinese_dates[chinese_date.month]?.has(chinese_date.day)
-            ) {
-              //console.log(year, month, day)
-              if (isValidDate(year, month, day)) {
+            if (isValidDate(year, month, day)) {
+              let chinese_date = to_chinese_date({ year, month, day })
+              // compare chinese date (month, date) in date range
+              // if in date range, yield
+              if (
+                viewing_chinese_dates[chinese_date.month]?.has(chinese_date.day)
+              ) {
+                //console.log(year, month, day)
                 yield { year, month, day }
               }
             }
@@ -86,8 +124,6 @@ export function query(input: QueryInput): QueryOutput {
     throw new Error('invalid date mode: ' + input.date_mode)
   }
 
-  let counters: Counters = {}
-
   function get_counter(
     district_id: number,
     year: number,
@@ -95,6 +131,7 @@ export function query(input: QueryInput): QueryOutput {
     day: number,
     time_index: number,
   ) {
+    // store data in chinese from
     if (input.date_mode === 'chinese_date') {
       let chinese_date = to_chinese_date({ year, month, day })
       month = chinese_date.month
@@ -150,30 +187,14 @@ export function query(input: QueryInput): QueryOutput {
       // if yes, go ahead
       // if no, skip or add data into 03/01
       for (let slot of time_slots) {
-        let counter_item
-        if (isValidDate(input.view_year, date.month, date.day)) {
-          counter_item = get_counter(
-            district_id,
-            date.year,
-            date.month,
-            date.day,
-            time_index,
-          )
-          // if date is not valid, but month is 2 and day is 29, then add data into 03/01
-        } else if (date.month === 2 && date.day === 29) {
-          counter_item = get_counter(district_id, date.year, 3, 1, time_index)
-        } else {
-          continue
-        }
-        /*
-        let counter_item = get_counter(
+        const counter_item = get_counter(
           district_id,
           date.year,
           date.month,
           date.day,
           time_index,
         )
-          */
+
         for (let time_id of slot.time_ids) {
           //console.log(date_id, time_id, input.district_id)
           const row = search(district_id, date_id, time_id)
@@ -205,6 +226,7 @@ export function query(input: QueryInput): QueryOutput {
             const total = counters[district_id][month][day][time_index].total
             const count = counters[district_id][month][day][time_index].count
             const average = total > 0 ? total / count : 0
+            // console.log(total, count, average)
             // get time ids use time_slots[time_index].time_ids[0] -> start time id
             const time_row = filter(proxy.time, {
               id: time_slots[time_index].time_ids[0],
@@ -213,11 +235,22 @@ export function query(input: QueryInput): QueryOutput {
               id: parseInt(district_id),
             })
             //console.log('time_id', time_slots[time_index].time_ids[0])
+            let start_month = parseInt(month)
+            let start_day = parseInt(day)
+
+            if (input.date_mode === 'chinese_date') {
+              const chinese_date =
+                view_chinese_dates[parseInt(month)][parseInt(day)]
+              const gregorian_date = to_gregorian_date(chinese_date)
+              start_month = gregorian_date.month
+              start_day = gregorian_date.day
+            }
+
             const district_name = district_row[0].name
             const { start, end } = getEventTimeRange(
               input.view_year,
-              parseInt(month),
-              parseInt(day),
+              start_month,
+              start_day,
               time_row[0].hour,
               time_row[0].minute,
               input.time_mode,
@@ -238,8 +271,13 @@ export function query(input: QueryInput): QueryOutput {
 
             events.push({
               district: district_name,
-              month: parseInt(month),
-              day: parseInt(day),
+              ...(input.date_mode === 'chinese_date' && {
+                month: parseInt(month),
+                day: parseInt(day),
+              }),
+              //...(input.date_mode === 'chinese_date' && { day: parseInt(day) }),
+              //month: parseInt(month),
+              //day: parseInt(day),
               average: average,
               strength: strength,
               start: start,
@@ -320,6 +358,10 @@ function getTimeIdsInRange(
   }
 
   const time_ids: number[] = []
+  // if start and end time id are the same, return [start_time_id]
+  if (start_time_id === end_time_id) {
+    return [start_time_id]
+  }
   // not include end_time_id
   // i.e. start: 16:00, end 18:00, return [id between 16:00 and 17:45]
   // i.e. include start and exclude end
@@ -329,12 +371,7 @@ function getTimeIdsInRange(
 
   // include last data for a day if end_hour is 23 and end_minute is 45
   // avoid double include if only 23:45 is selected
-  if (
-    end_hour === 23 &&
-    end_minute === 45 &&
-    start_hour !== end_hour &&
-    start_minute !== end_minute
-  ) {
+  if (end_hour === 23 && end_minute === 45) {
     time_ids.push(end_time_id)
   }
   return time_ids
