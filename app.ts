@@ -8,8 +8,6 @@ let calendar: Calendar | null = null
 const input = document.querySelector('#user_input_form') as HTMLFormElement
 // loading spinner for waiting data from server
 let isLoading = false
-// processing spinner for creating rainfall events
-let isCreating = false
 
 async function main() {
   const current_date = new Date()
@@ -28,7 +26,7 @@ async function main() {
     eventTextColor: '#000000',
     eventDisplay: 'block',
     displayEventTime: false,
-    eventOrder: 'start, priority',
+    eventOrder: 'priority, start',
     events: [],
     headerToolbar: {
       left: 'prev,next',
@@ -275,7 +273,7 @@ input.addEventListener('submit', event => {
   event?.preventDefault()
 
   // Rain fall data range
-  if (isLoading || isCreating) {
+  if (isLoading) {
     return
   }
 
